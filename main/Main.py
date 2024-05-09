@@ -2,10 +2,13 @@ import time
 from player import Player
 import pygame
 
-#zmienne
+#zmienne stałe
 
 SIZESCREEN = WIDTH, HEIGHT = 1050,700
 
+LIGHTBLUE = pygame.color.THECOLORS['lightblue']
+
+#ustawienia ekranu
 
 screen = pygame.display.set_mode(SIZESCREEN)
 
