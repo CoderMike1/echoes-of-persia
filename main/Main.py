@@ -1,11 +1,16 @@
 import time
 from player import Player
+from ui import UI
 import pygame
+from tileHandler import TileHandler
+#zmienne stałe
 
-#zmienne
+SIZESCREEN = WIDTH, HEIGHT = 1056,672
+#22 rzedy, 14  kolumn
+PIXEL_SIZE = 48
+LIGHTBLUE = pygame.color.THECOLORS['lightblue']
 
-SIZESCREEN = WIDTH, HEIGHT = 1050,700
-
+#ustawienia ekranu
 
 screen = pygame.display.set_mode(SIZESCREEN)
 
@@ -13,14 +18,16 @@ pygame.display.set_caption("Project game")
 
 
 #tworzenie obiektow gry
-player = Player(WIDTH/2,HEIGHT/2)
+clock = pygame.time.Clock()
+player = Player(WIDTH/2,HEIGHT-100)
+ui = UI(LIGHTBLUE)
+tileHandler = TileHandler()
+tileHandler.loadMap("map1.txt")
 
-
-def update():
+def update(keyPressed):
     #funkcja ogolna w ktorej umieszcza sie wszystkie zmiany dla wszystkich elementow gry
-
     #dokonujemy update gracza
-    player.update()
+    player.update(keyPressed)
 
 
 
@@ -29,8 +36,16 @@ def update():
 def draw():
     #funkcja ogolna w ktorej umieszcza sie wszystkie narysowania wszystkich elementow gry
 
+    # rysujemy UI, ekran elementy stale na ekranie, tlo
+    ui.draw(surface=screen)
+
     #rysujemy gracza
     player.draw(surface=screen)
+
+    #rysujemy bloki
+    tileHandler.draw(surface=screen)
+
+
 
     pygame.display.update()
     pass
@@ -53,7 +68,8 @@ def main():
                     gameRun = False
 
 
-        update()
+        update(pygame.key.get_pressed())
         draw()
+        clock.tick(60)
 
     pygame.quit()
