@@ -4,11 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="57c80249-bcde-482e-9322-137aab12f7fd" name="Changes" comment="basic wersja gry">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/images/player/playerIMG.png" beforeDir="false" afterPath="$PROJECT_DIR$/images/player/playerIMG.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/main/Main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main/Main.py" afterDir="false" />
-    </list>
+    <list default="true" id="57c80249-bcde-482e-9322-137aab12f7fd" name="Changes" comment="dodano prawidlowy image do player" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -126,11 +122,30 @@
       <option name="project" value="LOCAL" />
       <updated>1715259456929</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="dodano prawidlowy image do player">
+      <created>1715262692607</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1715262692607</updated>
+    </task>
+    <option name="localTasksCounter" value="3" />
     <servers />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="basic wersja gry" />
-    <option name="LAST_COMMIT_MESSAGE" value="basic wersja gry" />
+    <MESSAGE value="dodano prawidlowy image do player" />
+    <option name="LAST_COMMIT_MESSAGE" value="dodano prawidlowy image do player" />
   </component>
 </project>
