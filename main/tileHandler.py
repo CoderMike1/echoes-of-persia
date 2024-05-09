@@ -46,7 +46,6 @@ class TileHandler(pygame.sprite.Sprite):
             tile.draw(surface)
         pass
 
-
-
-
-
+    def checkCollision(self):
+        if pygame.sprite.spritecollideany(Main.player,self.all_sprites):
+            print("jest kolizja panie kolego")

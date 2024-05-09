@@ -1,6 +1,6 @@
 import pygame,os
-
 import Main
+import tileHandler
 path = os.path.join(os.path.dirname(os.getcwd()), 'images\player')
 PLAYER_WIDTH = 15
 PLAYER_HEIGHT = 50
@@ -26,7 +26,9 @@ class Player(pygame.sprite.Sprite):
             self.rect.move_ip([-SPEED,0])
         if keyPressed[pygame.K_d]:
             self.rect.move_ip([SPEED,0])
+        if keyPressed[pygame.K_s]:
+            self.rect.move_ip([0,SPEED])
 
-
+        Main.tileHandler.checkCollision()
 
         pass
