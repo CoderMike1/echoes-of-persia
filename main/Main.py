@@ -4,7 +4,7 @@ import pygame
 
 #zmienne
 
-SIZESCREEN = WIDTH, HEIGHT = 450, 450
+SIZESCREEN = WIDTH, HEIGHT = 1050,700
 
 
 screen = pygame.display.set_mode(SIZESCREEN)
