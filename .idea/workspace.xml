@@ -5,11 +5,22 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="57c80249-bcde-482e-9322-137aab12f7fd" name="Changes" comment="dodano prawidlowy image do player">
+      <change afterPath="$PROJECT_DIR$/images/player/idle1.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/images/player/princeAlpha.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/images/player/walk1.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/images/player/walk10.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/images/player/walk11.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/images/player/walk2.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/images/player/walk3.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/images/player/walk4.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/images/player/walk5.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/images/player/walk6.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/images/player/walk7.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/images/player/walk8.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/images/player/walk9.png" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/images/maps/map1.txt" beforeDir="false" afterPath="$PROJECT_DIR$/images/maps/map1.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/main/game.py" beforeDir="false" afterPath="$PROJECT_DIR$/main/game.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/main/player.py" beforeDir="false" afterPath="$PROJECT_DIR$/main/player.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/main/tileHandler.py" beforeDir="false" afterPath="$PROJECT_DIR$/main/tileHandler.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
