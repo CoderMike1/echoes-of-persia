@@ -4,11 +4,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="57c80249-bcde-482e-9322-137aab12f7fd" name="Changes" comment="">
+    <list default="true" id="57c80249-bcde-482e-9322-137aab12f7fd" name="Changes" comment="dodano prawidlowy image do player">
       <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_09_05_2024_18_44__Changes_.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_09_05_2024_18_44__Changes_.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/main/player.py" beforeDir="false" afterPath="$PROJECT_DIR$/main/player.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/main/tileHandler.py" beforeDir="false" afterPath="$PROJECT_DIR$/main/tileHandler.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/main/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/main/__init__.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -48,15 +47,15 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;work__in__progress&quot;,
-    &quot;last_opened_file_path&quot;: &quot;C:/Users/michał/Desktop/STUDIA/IV SEMESTR/OBIEKTOWE_GRA_PROJEKT/images/player&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;advanced.settings&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
+    "git-widget-placeholder": "newWork",
+    "last_opened_file_path": "C:/Users/michał/Desktop/STUDIA/IV SEMESTR/OBIEKTOWE_GRA_PROJEKT",
+    "settings.editor.selected.configurable": "advanced.settings"
   }
-}</component>
+}]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="C:\Users\michał\Desktop\STUDIA\IV SEMESTR\OBIEKTOWE_GRA_PROJEKT\images\player" />
