@@ -5,9 +5,11 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="57c80249-bcde-482e-9322-137aab12f7fd" name="Changes" comment="dodano prawidlowy image do player">
-      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_09_05_2024_18_44__Changes_.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_09_05_2024_18_44__Changes_.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/main/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/main/__init__.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/maps/map1.txt" beforeDir="false" afterPath="$PROJECT_DIR$/images/maps/map1.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/main/game.py" beforeDir="false" afterPath="$PROJECT_DIR$/main/game.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/main/player.py" beforeDir="false" afterPath="$PROJECT_DIR$/main/player.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/main/tileHandler.py" beforeDir="false" afterPath="$PROJECT_DIR$/main/tileHandler.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -52,7 +54,7 @@
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "SHARE_PROJECT_CONFIGURATION_FILES": "true",
     "git-widget-placeholder": "newWork",
-    "last_opened_file_path": "C:/Users/michał/Desktop/STUDIA/IV SEMESTR/OBIEKTOWE_GRA_PROJEKT",
+    "last_opened_file_path": "C:/Users/michał/Desktop/STUDIA/IV SEMESTR/OBIEKTOWE_GRA_PROJEKT/images/player",
     "settings.editor.selected.configurable": "advanced.settings"
   }
 }]]></component>
