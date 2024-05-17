@@ -102,8 +102,10 @@ class Player(pygame.sprite.Sprite):
         return im
 
     def draw(self,surface):
-        pygame.draw.rect(surface,(0,0,0,0),self.rect)
+        #pygame.draw.rect(surface,(0,0,0,0),self.rect)
         surface.blit(self.image,self.rect)
+
+
     def climbing(self):
         #sprawdzamy czy gracz ma mozliwosc skoku
         check1 = False
@@ -127,14 +129,22 @@ class Player(pygame.sprite.Sprite):
                 pass
 
         if check1 and check2:
+            self.climb = True
+            self.vel_y = 0
             # jesli jest mozliwosc do wspinaczki -> wspinamy sie
-            print(self.climbCounter)
             self.climbCounter += 0.1
             if self.climbCounter > 30:
                 self.climbCounter = 30
-            self.vel_y -= 1.2
+                self.climb = False
+            if int(self.climbCounter) >9:
+                self.rect.y -= 1
+            if int(self.climbCounter) >24:
+                self.rect.x += 5
             self.image = pygame.transform.flip(self.images[f"climb{int(self.climbCounter)}"], True, False)
-            self.rect = self.image.get_rect(topright=(leftWall, self.rect.top))
+
+            if int(self.climbCounter) <24:
+                self.rect = self.image.get_rect(bottomright=(leftWall, self.rect.bottom))
+
 
 
 
@@ -161,10 +171,8 @@ class Player(pygame.sprite.Sprite):
                 self.vel_y = 10
 
 
-
-
         #poruszanie sie postacia
-        if keys[pygame.K_RIGHT]:
+        if keys[pygame.K_RIGHT] and not self.climb:
             self.direction = "right"
             self.walkCounter += 0.1
             if self.walkCounter > 11:
@@ -177,7 +185,7 @@ class Player(pygame.sprite.Sprite):
             self.walk = True
             self.vel_x = self.SPEED
 
-        if keys[pygame.K_LEFT]:
+        if keys[pygame.K_LEFT] and not self.climb:
             self.direction = "left"
             self.walkCounter += 0.1
             if self.walkCounter >11:
@@ -192,7 +200,7 @@ class Player(pygame.sprite.Sprite):
             self.vel_x = -self.SPEED
 
         #jesli postac przestanie isc
-        if not self.walk:
+        if not self.walk and not self.climb:
             self.walkCounter = 1
 
             if self.direction == "right":
@@ -208,35 +216,27 @@ class Player(pygame.sprite.Sprite):
                 else:
                     self.rect = self.image.get_rect(topright=(current_right, current_top))
 
-        # wspinanie sie
+        #wspinanie sie
         if keys[pygame.K_UP]:
             self.climbing()
         else:
             self.climbCounter = 1
+            self.climb = False
 
-
-        #skok
-        if keys[pygame.K_SPACE] and not self.jump and self.jumpCounter > 35 and not self.climb:
-            self.vel_y = -self.SPEED * 2.5
-            self.jumpCounter = 0
-            self.jump = True
-        if not keys[pygame.K_SPACE]:
-            self.jump = False
-
-        #kucniecie
-        if keys[pygame.K_DOWN]:
+        # kucniecie
+        if keys[pygame.K_DOWN] and not self.climb:
             self.crouch = True
         else:
-            #jesli gracz nie wciska dolnego przycisku to resetuejmy licznik animacji
+            # jesli gracz nie wciska dolnego przycisku to resetuejmy licznik animacji
             self.crouchCounter = 1
 
         if self.crouch and not self.climb:
             self.crouchCounter += 0.3
-            if self.crouchCounter >11:
+            if self.crouchCounter > 11:
                 self.crouchCounter = 11
             if self.direction == "right":
                 self.image = pygame.transform.flip(self.images[f"crouch{int(self.crouchCounter)}"], True, False)
-                #jesli jest kolizja po lewej stronie to przesuwam postac troszke prawej strony
+                # jesli jest kolizja po lewej stronie to przesuwam postac troszke prawej strony
                 if self.collisionLeft:
                     self.rect = self.image.get_rect(bottomleft=(current_left, current_bottom))
                 else:
@@ -247,6 +247,18 @@ class Player(pygame.sprite.Sprite):
                     self.rect = self.image.get_rect(bottomright=(current_right, current_bottom))
                 else:
                     self.rect = self.image.get_rect(bottomleft=(current_left, current_bottom))
+
+
+
+        #skok
+        if keys[pygame.K_SPACE] and not self.jump and self.jumpCounter > 35 and not self.climb and not self.crouch:
+            self.vel_y = -self.SPEED * 2.5
+            self.jumpCounter = 0
+            self.jump = True
+        if not keys[pygame.K_SPACE]:
+            self.jump = False
+
+
 
 
         #wykrywanie kolizji z przedmiotami
