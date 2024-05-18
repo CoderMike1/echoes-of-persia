@@ -22,7 +22,7 @@ clock = pygame.time.Clock()
 player = Player(WIDTH/2,HEIGHT-100)
 ui = UI(LIGHTBLUE)
 tileHandler = TileHandler()
-tileHandler.loadMap("map1.txt")
+tileHandler.loadMap("map11.txt")
 
 def update(keyPressed):
     #funkcja ogolna w ktorej umieszcza sie wszystkie zmiany dla wszystkich elementow gry

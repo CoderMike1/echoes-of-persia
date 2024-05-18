@@ -217,11 +217,11 @@ class Player(pygame.sprite.Sprite):
                     self.rect = self.image.get_rect(topright=(current_right, current_top))
 
         #wspinanie sie
-        if keys[pygame.K_UP]:
-            self.climbing()
-        else:
-            self.climbCounter = 1
-            self.climb = False
+        # if keys[pygame.K_UP]:
+        #     self.climbing()
+        # else:
+        #     self.climbCounter = 1
+        #     self.climb = False
 
         # kucniecie
         if keys[pygame.K_DOWN] and not self.climb:
