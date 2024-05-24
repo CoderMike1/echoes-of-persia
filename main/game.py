@@ -1,7 +1,7 @@
 import pygame
 from player import Player
 from tileHandler import TileHandler
-from level import Level1,Level2
+from level import Level1,Level2,WorkingLevel
 class Game:
     LIGHTBLUE = pygame.color.THECOLORS['lightblue']
     def __init__(self):
@@ -16,10 +16,13 @@ class Game:
         #inicjalizacja obiektow
         self.player = Player(self,100,100)
 
-        self.level = Level1(self,11)
+        #self.level = Level1(self,10)
+        self.level = WorkingLevel(self,11)
 
         self.tileHandler = TileHandler(self)
+
         self.tileHandler.loadMap("level1/map10.txt")
+        self.tileHandler.loadMap(f"level{self.level.getLevel()}/map{self.level.currentMap}.txt")
 
 
     def draw(self):

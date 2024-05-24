@@ -1,9 +1,6 @@
 import pygame,os
 class Player(pygame.sprite.Sprite):
     path = os.path.join(os.path.dirname(os.getcwd()), 'images','player')
-
-
-
     PLAYER_WIDTH = 15
     PLAYER_HEIGHT = 50
     PLAYER_SCALE = 3
@@ -102,7 +99,9 @@ class Player(pygame.sprite.Sprite):
         return im
 
     def draw(self,surface):
-        #pygame.draw.rect(surface,(0,0,0,0),self.rect)
+
+        #czarny kwadrat zeby widziec kolizje
+        pygame.draw.rect(surface,(0,0,0,0),self.rect)
         surface.blit(self.image,self.rect)
 
 
@@ -110,7 +109,10 @@ class Player(pygame.sprite.Sprite):
         #sprawdzamy czy gracz ma mozliwosc skoku
         check1 = False
         check2 = False
+        check3 = True
         leftWall = None
+        bottomWall = None
+        rightWall = None
 
         for tile in self.game.tileHandler.tileMap:
             # I czy nie ma blokow nad soba
@@ -122,30 +124,51 @@ class Player(pygame.sprite.Sprite):
                 if tile.rect.colliderect((self.rect.x + self.game.PIXEL_SIZE, self.rect.y, self.rect.width,self.rect.height)):
                     check1 = True
                     leftWall = tile.rect.left
-
-                if tile.rect.colliderect((self.rect.x + self.game.PIXEL_SIZE, self.rect.y - self.game.PIXEL_SIZE, self.rect.width,self.rect.height)):
+                if tile.rect.colliderect((self.rect.x + self.game.PIXEL_SIZE, self.rect.y - self.game.PIXEL_SIZE*2, self.rect.width,self.rect.height)):
                     check2 = True
+                    bottomWall = tile.rect.bottom
+                if tile.rect.colliderect((self.rect.x + self.game.PIXEL_SIZE, self.rect.y - (self.game.PIXEL_SIZE*4), self.rect.width,self.rect.height)):
+                    check3 = False
             elif self.direction == "left":
-                pass
 
-        if check1 and check2:
+                if tile.rect.colliderect(
+                        (self.rect.x - self.game.PIXEL_SIZE, self.rect.y, self.rect.width, self.rect.height)):
+                    check1 = True
+                    rightWall = tile.rect.right
+                if tile.rect.colliderect((self.rect.x - self.game.PIXEL_SIZE, self.rect.y - self.game.PIXEL_SIZE*2,
+                                          self.rect.width, self.rect.height)):
+                    check2 = True
+                    bottomWall = tile.rect.bottom
+                if tile.rect.colliderect((self.rect.x - self.game.PIXEL_SIZE, self.rect.y - (self.game.PIXEL_SIZE * 4),
+                                          self.rect.width, self.rect.height)):
+                    check3 = False
+
+        if check1 and check2 and check3:
             self.climb = True
             self.vel_y = 0
             # jesli jest mozliwosc do wspinaczki -> wspinamy sie
+
             self.climbCounter += 0.1
-            if self.climbCounter > 30:
-                self.climbCounter = 30
-                self.climb = False
-            if int(self.climbCounter) >9:
-                self.rect.y -= 1
-            if int(self.climbCounter) >24:
-                self.rect.x += 5
-            self.image = pygame.transform.flip(self.images[f"climb{int(self.climbCounter)}"], True, False)
-
-            if int(self.climbCounter) <24:
-                self.rect = self.image.get_rect(bottomright=(leftWall, self.rect.bottom))
 
 
+            if 10 < int(self.climbCounter) < 18:
+                self.vel_y -=1
+
+            if self.direction == "right":
+                if int(self.climbCounter) >18:
+                    self.rect = self.image.get_rect(bottom=bottomWall-self.game.PIXEL_SIZE,right=self.rect.right+self.game.PIXEL_SIZE)
+                    self.climb = False
+                else:
+                    self.image = pygame.transform.flip(self.images[f"climb{int(self.climbCounter)}"],True,False)
+                    self.rect = self.image.get_rect(right=leftWall,top=self.rect.top,bottom=self.rect.bottom)
+
+            elif self.direction == "left":
+                if int(self.climbCounter) >18:
+                    self.rect = self.image.get_rect(bottom=bottomWall+self.game.PIXEL_SIZE,right=self.rect.right-self.game.PIXEL_SIZE)
+                    self.climb = False
+                else:
+                    self.image =self.images[f"climb{int(self.climbCounter)}"]
+                    self.rect = self.image.get_rect(left=rightWall,top=self.rect.top,bottom=self.rect.bottom)
 
 
     def update(self):
@@ -171,6 +194,8 @@ class Player(pygame.sprite.Sprite):
                 self.vel_y = 10
 
 
+
+
         #poruszanie sie postacia
         if keys[pygame.K_RIGHT] and not self.climb:
             self.direction = "right"
@@ -179,9 +204,9 @@ class Player(pygame.sprite.Sprite):
                 self.walkCounter = 3
             self.image = pygame.transform.flip(self.images[f"walk{int(self.walkCounter)}"],True,False)
             if self.collisionLeft:
-                self.rect = self.image.get_rect(topleft=(current_left,current_top))
+                self.rect = self.image.get_rect(topleft=(current_left,current_top),right=current_right,top=current_top)
             else:
-                self.rect = self.image.get_rect(right=current_right,bottom=current_bottom)
+                self.rect = self.image.get_rect(right=current_right,top=current_top)
             self.walk = True
             self.vel_x = self.SPEED
 
@@ -202,6 +227,7 @@ class Player(pygame.sprite.Sprite):
         #jesli postac przestanie isc
         if not self.walk and not self.climb:
             self.walkCounter = 1
+            self.climbCounter =1
 
             if self.direction == "right":
                 self.image = pygame.transform.flip(self.images[f"idle1"], True, False)
@@ -210,18 +236,18 @@ class Player(pygame.sprite.Sprite):
                 else:
                     self.rect = self.image.get_rect(topright=(current_right, current_top))
             elif self.direction == "left":
-                self.image = self.images[f"idle1"]
-                if self.collisionRight:
-                    self.rect = self.image.get_rect(topleft=(current_left, current_top))
-                else:
-                    self.rect = self.image.get_rect(topright=(current_right, current_top))
+                # self.image = self.images[f"idle1"]
+                # if self.collisionRight:
+                #     self.rect = self.image.get_rect(topleft=(current_right, current_top))
+                # else:
+                self.rect = self.image.get_rect(topright=(current_right, current_top))
 
         #wspinanie sie
-        # if keys[pygame.K_UP]:
-        #     self.climbing()
-        # else:
-        #     self.climbCounter = 1
-        #     self.climb = False
+        if keys[pygame.K_UP]:
+            self.climbing()
+        else:
+            self.climbCounter = 1
+            self.climb = False
 
         # kucniecie
         if keys[pygame.K_DOWN] and not self.climb:
@@ -229,7 +255,6 @@ class Player(pygame.sprite.Sprite):
         else:
             # jesli gracz nie wciska dolnego przycisku to resetuejmy licznik animacji
             self.crouchCounter = 1
-
         if self.crouch and not self.climb:
             self.crouchCounter += 0.3
             if self.crouchCounter > 11:

@@ -27,4 +27,20 @@ class Level1(Level):
 
 
 class Level2(Level):
-    pass
+    def __init__(self,game,currentMap):
+        super().__init__(game,currentMap)
+
+    def getLevel(self):
+        return 2
+
+
+
+class WorkingLevel(Level):
+    def __init__(self,game,currentMap):
+        super().__init__(game,currentMap)
+
+    def getLevel(self):
+        return 1
+
+    def update(self,level):
+        pass
