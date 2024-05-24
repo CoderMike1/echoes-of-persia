@@ -236,11 +236,11 @@ class Player(pygame.sprite.Sprite):
                 else:
                     self.rect = self.image.get_rect(topright=(current_right, current_top))
             elif self.direction == "left":
-                # self.image = self.images[f"idle1"]
-                # if self.collisionRight:
-                #     self.rect = self.image.get_rect(topleft=(current_right, current_top))
-                # else:
-                self.rect = self.image.get_rect(topright=(current_right, current_top))
+                self.image = self.images[f"idle1"]
+                if self.collisionRight:
+                    self.rect = self.image.get_rect(topleft=(current_left, current_top))
+                else:
+                    self.rect = self.image.get_rect(topright=(current_right, current_top))
 
         #wspinanie sie
         if keys[pygame.K_UP]:
