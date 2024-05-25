@@ -29,7 +29,7 @@ class Game:
         self.ui = UI(self)
 
         #tworzymy przeciwnika, narazie testowo
-        #self.enemy = EnemyEasy(self,300,self.HEIGHT-87)
+        self.enemy = EnemyEasy(self,300,self.HEIGHT-87)
 
 
     def draw(self):
@@ -45,7 +45,7 @@ class Game:
         self.ui.draw(self.window)
 
         #rysujemy przeciwnikow
-        #self.enemy.draw(self.window)
+       # self.enemy.draw(self.window)
 
 
         pygame.display.flip()

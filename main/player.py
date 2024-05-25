@@ -112,7 +112,7 @@ class Player(pygame.sprite.Sprite):
     def draw(self,surface):
 
         #czarny kwadrat zeby widziec kolizje
-        #pygame.draw.rect(surface,(0,0,0,0),self.rect)
+        pygame.draw.rect(surface,(0,0,0,0),self.rect)
         surface.blit(self.image,self.rect)
 
 
@@ -179,7 +179,7 @@ class Player(pygame.sprite.Sprite):
 
 
     def walking(self):
-        print(self.collisionRight,self.collisionLeft)
+        print("chodze")
         if self.direction == "right":
             if self.attack and not self.collisionRight:
                 self.walkCounter += 0.07
@@ -188,24 +188,23 @@ class Player(pygame.sprite.Sprite):
                 self.image = pygame.transform.flip(self.images[f"walkingSword{int(self.walkCounter)}"],True,False)
                 if self.collisionLeft:
                     self.rect = self.image.get_rect(topleft=(self.current_left,self.current_top))
-                    self.collisionLeft = False
+                    #self.collisionLeft = False
                 else:
                     self.rect = self.image.get_rect(topright=(self.current_right,self.current_top))
                 if self.pickUpSwordCollisionRight:
                     self.attack = False
-                    self.vel_x = 0
-                else:
-                    self.vel_x = self.SPEED/3
+                self.vel_x = self.SPEED/3
 
-            else:
+            elif not self.attack:
                 self.walkCounter += 0.1
                 if self.walkCounter > 11:
                     self.walkCounter = 3
                 self.image = pygame.transform.flip(self.images[f"walk{int(self.walkCounter)}"], True, False)
                 if self.collisionLeft:
                     self.rect = self.image.get_rect(topleft=(self.current_left, self.current_top))
-                    self.collisionLeft = False
+                    #self.collisionLeft = False
                 else:
+                    self.collisionRight = False
                     self.rect = self.image.get_rect(topright=(self.current_right,self.current_top))
                 self.vel_x = self.SPEED
             self.walk = True
@@ -218,31 +217,36 @@ class Player(pygame.sprite.Sprite):
                     self.walkCounter = 1
                 self.image = self.images[f"walkingSword{int(self.walkCounter)}"]
                 if self.collisionRight:
+                    print("chodze0000000000000")
                     self.rect = self.image.get_rect(topright=(self.current_right,self.current_top))
-                    self.collisionRight = False
+                    #self.collisionRight = False
                 else:
+                    print("chodze222222222222222")
                     self.rect = self.image.get_rect(topleft=(self.current_left,self.current_top))
+                print(self.pickUpSwordCollisionLeft)
                 if self.pickUpSwordCollisionLeft:
+                    print("999999999999999999")
                     self.attack = False
-                    self.vel_x = 0
-                else:
-                    self.vel_x = -self.SPEED/3
+                self.vel_x = -self.SPEED/3
 
-            else:
+            elif not self.attack:
+                print("chodze1111111111111")
                 self.walkCounter += 0.1
                 if self.walkCounter > 11:
                     self.walkCounter = 3
                 self.image = self.images[f"walk{int(self.walkCounter)}"]
                 if self.collisionRight:
                     self.rect = self.image.get_rect(right=self.current_right, bottom=self.current_bottom)
-                    self.collisionRight = False
+                    #self.collisionRight = False
                 else:
+                    self.collisionLeft = False
                     self.rect = self.image.get_rect(topleft=(self.current_left, self.current_top))
                 self.vel_x = -self.SPEED
             self.walk = True
 
 
     def standing(self):
+        print("stoje")
         self.walkCounter = 1
         self.climbCounter = 1
         if self.direction == "right":
@@ -253,7 +257,7 @@ class Player(pygame.sprite.Sprite):
             else:
                 if self.collisionLeft:
                     self.rect = self.image.get_rect(topright=(self.current_right, self.current_top))
-                    self.collisionLeft = False
+                    #self.collisionLeft = False
                 else:
                     self.rect = self.image.get_rect(bottomright=(self.current_right, self.current_bottom))
         elif self.direction == "left":
@@ -264,7 +268,7 @@ class Player(pygame.sprite.Sprite):
             else:
                 if self.collisionRight:
                     self.rect = self.image.get_rect(topleft=(self.current_left, self.current_top))
-                    self.collisionRight = False
+                    #self.collisionRight = False
                 else:
                     self.rect = self.image.get_rect(bottomleft=(self.current_left, self.current_bottom))
 
@@ -309,6 +313,7 @@ class Player(pygame.sprite.Sprite):
 
 
         elif not self.attack:
+            print("nie atakuje")
             if self.attackCounter >1:
                 self.attackCounter -= 0.2
                 if self.attackCounter <1:
@@ -321,7 +326,7 @@ class Player(pygame.sprite.Sprite):
                 elif self.direction == "right":
                     self.image = pygame.transform.flip(self.images[f"pickUpSword{int(self.attackCounter)}"],True,False)
                     self.rect= self.image.get_rect(topleft=(self.current_left,self.current_top))
-        self.pickUpSwordCollisionRight = self.pickUpSwordCollisionLeft = False
+        #self.pickUpSwordCollisionRight = self.pickUpSwordCollisionLeft = False
 
     def update(self):
 
@@ -398,19 +403,18 @@ class Player(pygame.sprite.Sprite):
             self.attack = False
 
         self.attacking()
-
         #wykrywanie kolizji z przedmiotami
         for tile in self.game.tileHandler.tileMap:
             f_recY = pygame.Rect(self.rect.x,self.rect.y + self.vel_y,self.rect.width,self.rect.height)
             if self.crouch and tile.rect.colliderect((self.rect.x,self.rect.y - 1*self.game.PIXEL_SIZE,self.rect.width,self.rect.height)):
                 self.crouchUPColission = True
 
-            if tile.rect.colliderect((self.rect.x-10,self.rect.y-3,self.rect.width,self.rect.height)):
+            if tile.rect.colliderect((self.rect.left-11,self.rect.y-3,self.rect.width,self.rect.height)):
+                print("lewo")
                 self.pickUpSwordCollisionLeft = True
-                self.collisionRight = False
-            if tile.rect.colliderect((self.rect.right+10,self.rect.y-3,self.rect.width,self.rect.height)):
+            if tile.rect.colliderect((self.rect.right+11,self.rect.y-3,self.rect.width,self.rect.height)):
+                print("prawo")
                 self.pickUpSwordCollisionRight = True
-                self.collisionLeft = False
             if tile.rect.colliderect(f_recY):
                 if self.vel_y < 0:
                     #skacze
@@ -423,6 +427,7 @@ class Player(pygame.sprite.Sprite):
                     self.vel_y = 0
 
             f_recX = pygame.Rect(self.rect.x + self.vel_x,self.rect.y, self.rect.width,self.rect.height)
+
             if tile.rect.colliderect(f_recX):
                 if self.vel_x > 0:
                     # w prawo
