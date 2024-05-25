@@ -179,6 +179,7 @@ class Player(pygame.sprite.Sprite):
 
 
     def walking(self):
+        print(self.collisionRight,self.collisionLeft)
         if self.direction == "right":
             if self.attack and not self.collisionRight:
                 self.walkCounter += 0.07
@@ -234,6 +235,7 @@ class Player(pygame.sprite.Sprite):
                 self.image = self.images[f"walk{int(self.walkCounter)}"]
                 if self.collisionRight:
                     self.rect = self.image.get_rect(right=self.current_right, bottom=self.current_bottom)
+                    self.collisionRight = False
                 else:
                     self.rect = self.image.get_rect(topleft=(self.current_left, self.current_top))
                 self.vel_x = -self.SPEED
@@ -241,7 +243,6 @@ class Player(pygame.sprite.Sprite):
 
 
     def standing(self):
-        print(self.collisionLeft,self.collisionRight)
         self.walkCounter = 1
         self.climbCounter = 1
         if self.direction == "right":
