@@ -189,7 +189,6 @@ class Player(pygame.sprite.Sprite):
                     self.rect = self.image.get_rect(topleft=(self.current_left,self.current_top))
                     self.collisionLeft = False
                 else:
-                    print('tu?')
                     self.rect = self.image.get_rect(topright=(self.current_right,self.current_top))
                 if self.pickUpSwordCollisionRight:
                     self.attack = False
@@ -242,6 +241,7 @@ class Player(pygame.sprite.Sprite):
 
 
     def standing(self):
+        print(self.collisionLeft,self.collisionRight)
         self.walkCounter = 1
         self.climbCounter = 1
         if self.direction == "right":
@@ -287,7 +287,6 @@ class Player(pygame.sprite.Sprite):
 
     def attacking(self):
         if self.attack and not self.walk:
-
             if self.attackCounter > 10:
                 self.attackCounter = 10
             if self.direction == "right" and not self.pickUpSwordCollisionRight:
@@ -387,6 +386,7 @@ class Player(pygame.sprite.Sprite):
         if not keys[pygame.K_SPACE]:
             self.jump = False
 
+
         #atak
         if keys[pygame.K_LCTRL]:
             if self.direction == "right" and not self.collisionRight and not self.pickUpSwordCollisionRight:
@@ -404,10 +404,12 @@ class Player(pygame.sprite.Sprite):
             if self.crouch and tile.rect.colliderect((self.rect.x,self.rect.y - 1*self.game.PIXEL_SIZE,self.rect.width,self.rect.height)):
                 self.crouchUPColission = True
 
-            if tile.rect.colliderect((self.rect.x-30,self.rect.y-3,self.rect.width,self.rect.height)):
+            if tile.rect.colliderect((self.rect.x-10,self.rect.y-3,self.rect.width,self.rect.height)):
                 self.pickUpSwordCollisionLeft = True
-            if tile.rect.colliderect((self.rect.x+30,self.rect.y-3,self.rect.width,self.rect.height)):
+                self.collisionRight = False
+            if tile.rect.colliderect((self.rect.right+10,self.rect.y-3,self.rect.width,self.rect.height)):
                 self.pickUpSwordCollisionRight = True
+                self.collisionLeft = False
             if tile.rect.colliderect(f_recY):
                 if self.vel_y < 0:
                     #skacze

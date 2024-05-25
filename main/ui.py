@@ -9,8 +9,8 @@ class UI:
     def __init__(self,game):
         self.game = game
         self.loadData()
-        self.playerMaxLife = 3
-        self.playerLife = self.playerMaxLife
+        self.playerMaxLifes = 3
+        self.playerLifes = self.playerMaxLifes
 
     def loadData(self):
         self.rect = pygame.Rect(0, 0, self.game.WIDTH, self.game.PIXEL_SIZE)
@@ -30,7 +30,7 @@ class UI:
 
 
         #rysujemy poziom zycia
-        for _ in range(self.playerLife):
+        for _ in range(self.playerLifes):
             pygame.draw.rect(surface,self.RED,self.heartRect)
             self.heartRect.x += 50
         self.heartRect.x = 15
@@ -42,6 +42,6 @@ class UI:
 
 
         time_text = self.font.render(f"{minutes:02}:{seconds:02}",True,self.BLACK)
-        surface.blit(time_text,((self.game.WIDTH - time_text.get_width()-20,5)))
+        surface.blit(time_text,(((self.game.WIDTH/2) - (time_text.get_width()/2),45)))
 
 
