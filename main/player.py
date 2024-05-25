@@ -31,6 +31,13 @@ class Player(pygame.sprite.Sprite):
 
         self.crouch = False
         self.crouchCounter = 1
+        self.crouchUPColission = False
+
+        self.attack = False
+        self.attackCounter = 1
+        self.hidedSword = False
+        self.pickUpSwordCollisionRight = False
+        self.pickUpSwordCollisionLeft = False
 
     def pLoad(self,fileName):
         i = pygame.image.load(os.path.join(self.path,fileName+".png")).convert_alpha()
@@ -84,12 +91,28 @@ class Player(pygame.sprite.Sprite):
         im.update({"climb17": self.pLoad("climb17")})
         im.update({"climb18": self.pLoad("climb18")})
 
+
+        im.update({"pickUpSword1": self.pLoad("pickUpSword1")})
+        im.update({"pickUpSword2": self.pLoad("pickUpSword2")})
+        im.update({"pickUpSword3": self.pLoad("pickUpSword3")})
+        im.update({"pickUpSword4": self.pLoad("pickUpSword4")})
+        im.update({"pickUpSword5": self.pLoad("pickUpSword5")})
+        im.update({"pickUpSword6": self.pLoad("pickUpSword6")})
+        im.update({"pickUpSword7": self.pLoad("pickUpSword7")})
+        im.update({"pickUpSword8": self.pLoad("pickUpSword8")})
+        im.update({"pickUpSword9": self.pLoad("pickUpSword9")})
+        im.update({"pickUpSword10": self.pLoad("pickUpSword10")})
+
+        im.update({"walkingSword1": self.pLoad("walkingSword1")})
+        im.update({"walkingSword2": self.pLoad("walkingSword2")})
+        im.update({"walkingSword3": self.pLoad("walkingSword3")})
+
         return im
 
     def draw(self,surface):
 
         #czarny kwadrat zeby widziec kolizje
-        pygame.draw.rect(surface,(0,0,0,0),self.rect)
+        #pygame.draw.rect(surface,(0,0,0,0),self.rect)
         surface.blit(self.image,self.rect)
 
 
@@ -155,16 +178,162 @@ class Player(pygame.sprite.Sprite):
                     self.rect = self.image.get_rect(left=rightWall,top=self.rect.top,bottom=self.rect.bottom)
 
 
+    def walking(self):
+        if self.direction == "right":
+            if self.attack and not self.collisionRight:
+                self.walkCounter += 0.07
+                if self.walkCounter >4:
+                    self.walkCounter = 1
+                self.image = pygame.transform.flip(self.images[f"walkingSword{int(self.walkCounter)}"],True,False)
+                if self.collisionLeft:
+                    self.rect = self.image.get_rect(topleft=(self.current_left,self.current_top))
+                    self.collisionLeft = False
+                else:
+                    print('tu?')
+                    self.rect = self.image.get_rect(topright=(self.current_right,self.current_top))
+                if self.pickUpSwordCollisionRight:
+                    self.attack = False
+                    self.vel_x = 0
+                else:
+                    self.vel_x = self.SPEED/3
+
+            else:
+                self.walkCounter += 0.1
+                if self.walkCounter > 11:
+                    self.walkCounter = 3
+                self.image = pygame.transform.flip(self.images[f"walk{int(self.walkCounter)}"], True, False)
+                if self.collisionLeft:
+                    self.rect = self.image.get_rect(topleft=(self.current_left, self.current_top))
+                    self.collisionLeft = False
+                else:
+                    self.rect = self.image.get_rect(topright=(self.current_right,self.current_top))
+                self.vel_x = self.SPEED
+            self.walk = True
+
+
+        elif self.direction == "left":
+            if self.attack and not self.collisionLeft:
+                self.walkCounter += 0.07
+                if self.walkCounter >4:
+                    self.walkCounter = 1
+                self.image = self.images[f"walkingSword{int(self.walkCounter)}"]
+                if self.collisionRight:
+                    self.rect = self.image.get_rect(topright=(self.current_right,self.current_top))
+                    self.collisionRight = False
+                else:
+                    self.rect = self.image.get_rect(topleft=(self.current_left,self.current_top))
+                if self.pickUpSwordCollisionLeft:
+                    self.attack = False
+                    self.vel_x = 0
+                else:
+                    self.vel_x = -self.SPEED/3
+
+            else:
+                self.walkCounter += 0.1
+                if self.walkCounter > 11:
+                    self.walkCounter = 3
+                self.image = self.images[f"walk{int(self.walkCounter)}"]
+                if self.collisionRight:
+                    self.rect = self.image.get_rect(right=self.current_right, bottom=self.current_bottom)
+                else:
+                    self.rect = self.image.get_rect(topleft=(self.current_left, self.current_top))
+                self.vel_x = -self.SPEED
+            self.walk = True
+
+
+    def standing(self):
+        self.walkCounter = 1
+        self.climbCounter = 1
+        if self.direction == "right":
+            self.image = pygame.transform.flip(self.images[f"idle1"], True, False)
+            if self.hidedSword:
+                self.rect = self.image.get_rect(topleft=(self.current_left, self.current_top))
+                self.hidedSword = False
+            else:
+                if self.collisionLeft:
+                    self.rect = self.image.get_rect(topright=(self.current_right, self.current_top))
+                    self.collisionLeft = False
+                else:
+                    self.rect = self.image.get_rect(bottomright=(self.current_right, self.current_bottom))
+        elif self.direction == "left":
+            self.image = self.images[f"idle1"]
+            if self.hidedSword:
+                self.rect = self.image.get_rect(topright=(self.current_right, self.current_top))
+                self.hidedSword = False
+            else:
+                if self.collisionRight:
+                    self.rect = self.image.get_rect(topleft=(self.current_left, self.current_top))
+                    self.collisionRight = False
+                else:
+                    self.rect = self.image.get_rect(bottomleft=(self.current_left, self.current_bottom))
+
+    def crouching(self):
+        self.crouchCounter += 0.3
+        if self.crouchCounter > 11:
+            self.crouchCounter = 11
+        if self.direction == "right":
+            self.image = pygame.transform.flip(self.images[f"crouch{int(self.crouchCounter)}"], True, False)
+            # jesli jest kolizja po lewej stronie to przesuwam postac troszke prawej strony
+            if self.collisionLeft:
+                self.rect = self.image.get_rect(bottomleft=(self.current_left, self.current_bottom))
+            else:
+                self.rect = self.image.get_rect(bottomright=(self.current_right, self.current_bottom))
+        elif self.direction == "left":
+            self.image = self.images[f"crouch{int(self.crouchCounter)}"]
+            if self.collisionRight:
+                self.rect = self.image.get_rect(bottomright=(self.current_right, self.current_bottom))
+            else:
+                self.rect = self.image.get_rect(bottomleft=(self.current_left, self.current_bottom))
+
+    def attacking(self):
+        if self.attack and not self.walk:
+
+            if self.attackCounter > 10:
+                self.attackCounter = 10
+            if self.direction == "right" and not self.pickUpSwordCollisionRight:
+                self.attackCounter += 0.2
+                self.image = pygame.transform.flip(self.images[f"pickUpSword{int(self.attackCounter)}"],True,False)
+                if self.collisionLeft:
+                    self.rect = self.image.get_rect(topleft=(self.current_left,self.current_top))
+                    self.collisionLeft = False
+                else:
+                    self.rect = self.image.get_rect(topleft=(self.current_left,self.current_top))
+            elif self.direction == "left" and not self.pickUpSwordCollisionLeft:
+                self.attackCounter += 0.2
+                self.image = self.images[f"pickUpSword{int(self.attackCounter)}"]
+                if self.collisionRight:
+                    self.rect = self.image.get_rect(topright=(self.current_right,self.current_top))
+                    self.collisionRight = False
+                else:
+                    self.rect = self.image.get_rect(topright=(self.current_right, self.current_top))
+
+
+        elif not self.attack:
+            if self.attackCounter >1:
+                self.attackCounter -= 0.2
+                if self.attackCounter <1:
+                    self.attackCounter = 1
+                    self.hidedSword = True
+
+                if self.direction == "left":
+                    self.image = self.images[f"pickUpSword{int(self.attackCounter)}"]
+                    self.rect = self.image.get_rect(topright=(self.current_right, self.current_top))
+                elif self.direction == "right":
+                    self.image = pygame.transform.flip(self.images[f"pickUpSword{int(self.attackCounter)}"],True,False)
+                    self.rect= self.image.get_rect(topleft=(self.current_left,self.current_top))
+        self.pickUpSwordCollisionRight = self.pickUpSwordCollisionLeft = False
+
     def update(self):
+
         #reset oraz dodawanie do wartosci
         self.vel_x = 0
         self.jumpCounter +=1
         self.walk = False
         self.crouch = False
-        current_left = self.rect.left
-        current_right = self.rect.right
-        current_bottom = self.rect.bottom
-        current_top = self.rect.top
+        self.current_left = self.rect.left
+        self.current_right = self.rect.right
+        self.current_bottom = self.rect.bottom
+        self.current_top = self.rect.top
 
 
         keys = pygame.key.get_pressed()
@@ -177,52 +346,19 @@ class Player(pygame.sprite.Sprite):
 
 
         #poruszanie sie postacia
+        #w prawo
         if keys[pygame.K_RIGHT] and not self.climb:
             self.direction = "right"
-            self.walkCounter += 0.1
-            if self.walkCounter > 11:
-                self.walkCounter = 3
-            self.image = pygame.transform.flip(self.images[f"walk{int(self.walkCounter)}"],True,False)
-            if self.collisionLeft:
-                self.rect = self.image.get_rect(topleft=(current_left,current_top))
-            else:
-                self.rect = self.image.get_rect(right=current_right,top=current_top)
-            self.walk = True
-            self.vel_x = self.SPEED
+            self.walking()
 
+        #w lewo
         if keys[pygame.K_LEFT] and not self.climb:
             self.direction = "left"
-            self.walkCounter += 0.1
-            if self.walkCounter >11:
-                self.walkCounter = 3
-            self.image = self.images[f"walk{int(self.walkCounter)}"]
-            if self.collisionRight:
-                self.rect = self.image.get_rect(right=current_right, bottom=current_bottom)
-            else:
-                self.rect = self.image.get_rect(topleft=(current_left,current_top))
-
-            self.walk = True
-            self.vel_x = -self.SPEED
+            self.walking()
 
         #jesli postac przestanie isc
-        if not self.walk and not self.climb:
-            self.walkCounter = 1
-            self.climbCounter =1
-
-            if self.direction == "right":
-                self.image = pygame.transform.flip(self.images[f"idle1"], True, False)
-                if self.collisionLeft:
-                    self.rect = self.image.get_rect(topright=(current_right, current_top))
-                    self.collisionLeft = False
-                else:
-                    self.rect = self.image.get_rect(bottomright=(current_right, current_bottom))
-            elif self.direction == "left":
-                self.image = self.images[f"idle1"]
-                if self.collisionRight:
-                    self.rect = self.image.get_rect(topleft=(current_left, current_top))
-                    self.collisionRight = False
-                else:
-                    self.rect = self.image.get_rect(bottomleft=(current_left, current_bottom))
+        if not self.walk and not self.climb and not self.attack:
+            self.standing()
 
         #wspinanie sie
         if keys[pygame.K_UP]:
@@ -234,41 +370,44 @@ class Player(pygame.sprite.Sprite):
         # kucniecie
         if keys[pygame.K_DOWN] and not self.climb:
             self.crouch = True
+        elif self.crouchUPColission:
+            self.crouch = True
         else:
-            # jesli gracz nie wciska dolnego przycisku to resetuejmy licznik animacji
             self.crouchCounter = 1
         if self.crouch and not self.climb:
-            self.crouchCounter += 0.3
-            if self.crouchCounter > 11:
-                self.crouchCounter = 11
-            if self.direction == "right":
-                self.image = pygame.transform.flip(self.images[f"crouch{int(self.crouchCounter)}"], True, False)
-                # jesli jest kolizja po lewej stronie to przesuwam postac troszke prawej strony
-                if self.collisionLeft:
-                    self.rect = self.image.get_rect(bottomleft=(current_left, current_bottom))
-                else:
-                    self.rect = self.image.get_rect(bottomright=(current_right, current_bottom))
-            elif self.direction == "left":
-                self.image = self.images[f"crouch{int(self.crouchCounter)}"]
-                if self.collisionRight:
-                    self.rect = self.image.get_rect(bottomright=(current_right, current_bottom))
-                else:
-                    self.rect = self.image.get_rect(bottomleft=(current_left, current_bottom))
+            self.crouching()
 
-
+        self.crouchUPColission = False
 
         #skok
-        if keys[pygame.K_SPACE] and not self.jump and self.jumpCounter > 35 and not self.climb and not self.crouch:
+        if keys[pygame.K_SPACE] and not self.jump and self.jumpCounter > 35 and not self.climb and not self.crouch and not self.attack:
             self.vel_y = -self.SPEED * 2.5
             self.jumpCounter = 0
             self.jump = True
         if not keys[pygame.K_SPACE]:
             self.jump = False
 
+        #atak
+        if keys[pygame.K_LCTRL]:
+            if self.direction == "right" and not self.collisionRight and not self.pickUpSwordCollisionRight:
+                self.attack = True
+            elif self.direction == "left" and not self.collisionLeft and not self.pickUpSwordCollisionLeft:
+                self.attack = True
+        if keys[pygame.K_RCTRL]:
+            self.attack = False
+
+        self.attacking()
 
         #wykrywanie kolizji z przedmiotami
         for tile in self.game.tileHandler.tileMap:
             f_recY = pygame.Rect(self.rect.x,self.rect.y + self.vel_y,self.rect.width,self.rect.height)
+            if self.crouch and tile.rect.colliderect((self.rect.x,self.rect.y - 1*self.game.PIXEL_SIZE,self.rect.width,self.rect.height)):
+                self.crouchUPColission = True
+
+            if tile.rect.colliderect((self.rect.x-30,self.rect.y-3,self.rect.width,self.rect.height)):
+                self.pickUpSwordCollisionLeft = True
+            if tile.rect.colliderect((self.rect.x+30,self.rect.y-3,self.rect.width,self.rect.height)):
+                self.pickUpSwordCollisionRight = True
             if tile.rect.colliderect(f_recY):
                 if self.vel_y < 0:
                     #skacze

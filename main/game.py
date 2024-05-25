@@ -2,10 +2,11 @@ import pygame
 from player import Player
 from tileHandler import TileHandler
 from level import Level1,Level2,WorkingLevel
+from ui import UI
 class Game:
     LIGHTBLUE = pygame.color.THECOLORS['lightblue']
     def __init__(self):
-        pygame.display.init()
+        pygame.init()
         pygame.display.set_caption("Project game")
         self.WIDTH = 1056
         self.HEIGHT = 672
@@ -24,6 +25,8 @@ class Game:
         self.tileHandler.loadMap("level1/map10.txt")
         self.tileHandler.loadMap(f"level{self.level.getLevel()}/map{self.level.currentMap}.txt")
 
+        self.ui = UI(self)
+
 
     def draw(self):
         self.window.fill(self.LIGHTBLUE)
@@ -33,6 +36,9 @@ class Game:
 
         #rysujemy mape
         self.tileHandler.draw(self.window)
+
+        #rysujemy statystyki
+        self.ui.draw(self.window)
 
 
         pygame.display.flip()
