@@ -45,6 +45,9 @@ class Player(pygame.sprite.Sprite):
         self.hit = False
         self.hitCounter =1
 
+        self.defend = False
+
+
     def pLoad(self,fileName):
         i = pygame.image.load(os.path.join(self.path,fileName+".png")).convert_alpha()
         i = pygame.transform.scale(i,(i.get_width()*self.PLAYER_SCALE,i.get_height()*self.PLAYER_SCALE))
@@ -124,14 +127,19 @@ class Player(pygame.sprite.Sprite):
         im.update({"attack4": self.pLoad("attack4")})
         im.update({"attack5": self.pLoad("attack5")})
 
+        im.update({"defend1": self.pLoad("defend1")})
+
+        im.update({"getHit": self.pLoad("getHit")})
+
         return im
+
+
 
     def draw(self,surface):
 
         #czarny kwadrat zeby widziec kolizje
         #pygame.draw.rect(surface,(0,0,0,0),self.rect)
         surface.blit(self.image,self.rect)
-
 
     def climbing(self):
         #sprawdzamy czy gracz ma mozliwosc skoku
@@ -332,7 +340,14 @@ class Player(pygame.sprite.Sprite):
                 else:
                     self.rect = self.image.get_rect(topleft=(self.current_left,self.current_top))
     def attacking(self):
-        if self.hit:
+        if self.defend:
+            if self.direction == "right":
+                self.image = pygame.transform.flip(self.images[f"defend1"],True,False)
+                self.rect = self.image.get_rect(topleft=(self.current_left,self.current_top))
+            elif self.direction == "left":
+                self.image = self.images[f"defend1"]
+                self.rect = self.image.get_rect(topright=(self.current_right,self.current_top))
+        elif self.hit:
             self.hitCounter += 0.15
             if self.hitCounter > 6:
                 self.hitCounter = 1
@@ -387,6 +402,7 @@ class Player(pygame.sprite.Sprite):
         self.jumpCounter +=1
         self.walk = False
         self.crouch = False
+        self.defend = False
         self.current_left = self.rect.left
         self.current_right = self.rect.right
         self.current_bottom = self.rect.bottom
@@ -412,6 +428,8 @@ class Player(pygame.sprite.Sprite):
         if keys[pygame.K_LEFT] and not self.climb:
             self.direction = "left"
             self.walking()
+        
+
 
         #jesli postac przestanie isc
         if not self.walk and not self.climb and not self.attack:
@@ -419,7 +437,10 @@ class Player(pygame.sprite.Sprite):
 
         #wspinanie sie
         if keys[pygame.K_UP]:
-            self.climbing()
+            if self.attack:
+                self.defend = True
+            else:
+                self.climbing()
         else:
             self.climbCounter = 1
             self.climb = False
@@ -498,6 +519,16 @@ class Player(pygame.sprite.Sprite):
                     self.collisionRight = False
                     self.rect.left = tile.rect.right
                     self.vel_x = 0
+        #wykrywanie kolizji z wrogami
+        for enemy in self.game.level.enemies:
+            if enemy.rect.colliderect((self.rect.x + self.vel_x*2,self.rect.y,self.rect.width,self.rect.height)):
+                if self.vel_x > 0:
+                    self.rect.right = enemy.rect.left
+                    self.vel_x = 0
+                elif self.vel_x < 0:
+                    self.rect.left = enemy.rect.right
+                    self.vel_x = 0
+
         #ruch
         self.rect.x += self.vel_x
         self.rect.y += self.vel_y

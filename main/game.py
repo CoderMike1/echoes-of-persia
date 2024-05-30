@@ -3,7 +3,6 @@ from player import Player
 from tileHandler import TileHandler
 from level import Level1,Level2,WorkingLevel
 from ui import UI
-from enemy import EnemyEasy
 class Game:
     LIGHTBLUE = pygame.color.THECOLORS['lightblue']
     def __init__(self):
@@ -28,8 +27,6 @@ class Game:
 
         self.ui = UI(self)
 
-        #tworzymy przeciwnika, narazie testowo
-        self.enemy = EnemyEasy(self,500,100)
 
 
     def draw(self):
@@ -44,8 +41,9 @@ class Game:
         #rysujemy statystyki
         self.ui.draw(self.window)
 
-        #rysujemy przeciwnikow
-        self.enemy.draw(self.window)
+        #rysujemy rzeczy na levelu
+        self.level.draw(self.window)
+
 
 
         pygame.display.flip()
@@ -62,7 +60,6 @@ class Game:
 
         self.level.update(self.level.getLevel())
 
-        self.enemy.update()
 
         pass
 
