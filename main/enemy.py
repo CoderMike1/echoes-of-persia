@@ -6,7 +6,7 @@ class Enemy(pygame.sprite.Sprite,abc.ABC):
     def __init__(self,game,lives,speed,enemyLevel,cx,cy,images,hitGapTime):
         super().__init__()
         self.game = game
-        self.enemyLives = 1
+        self.enemyLives = lives
         self.enemySpeed = speed
         self.images = images
         self.image = self.images[f"{enemyLevel}EnemyIdle"]
@@ -150,12 +150,12 @@ class Enemy(pygame.sprite.Sprite,abc.ABC):
 
 
     def patroling(self):
-        if self.rect.left > self.game.player.rect.right:
+        if self.rect.left >= self.game.player.rect.left:
             #obracamy sie w lewa strone
             self.direction = "left"
             self.image = pygame.transform.flip(self.images[f"{self.enemyLevel}EnemyIdle"],True,False)
             self.rect = self.image.get_rect(topleft=(self.currentLeft,self.currentTop))
-        elif self.rect.right < self.game.player.rect.left:
+        elif self.rect.right <= self.game.player.rect.right:
             #obracamy sie w prawa strone
             self.direction = "right"
             self.image = self.images[f"{self.enemyLevel}EnemyIdle"]
@@ -208,7 +208,7 @@ class Enemy(pygame.sprite.Sprite,abc.ABC):
                     self.enemyDefendFlag = False
 
                 #domyslnie patroluje
-                if self.attackMode:
+                if self.attackMode and not self.game.player.isDead:
                     self.attacking()
                 else:
                     self.patroling()

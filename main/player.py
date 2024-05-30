@@ -52,6 +52,9 @@ class Player(pygame.sprite.Sprite):
 
         self.getHitCounter = 0
 
+        self.isDead = False
+        self.deadCounter = 1
+
 
     def pLoad(self,fileName):
         i = pygame.image.load(os.path.join(self.path,fileName+".png")).convert_alpha()
@@ -136,6 +139,14 @@ class Player(pygame.sprite.Sprite):
 
         im.update({"getHit": self.pLoad("getHit")})
 
+        im.update({"dying1": self.pLoad("dying1")})
+        im.update({"dying2": self.pLoad("dying2")})
+        im.update({"dying3": self.pLoad("dying3")})
+        im.update({"dying4": self.pLoad("dying4")})
+        im.update({"dying5": self.pLoad("dying5")})
+        im.update({"dying6": self.pLoad("dying6")})
+
+
         return im
 
 
@@ -147,10 +158,13 @@ class Player(pygame.sprite.Sprite):
         surface.blit(self.image,self.rect)
 
     def checkDistance(self):
-        if self.direction == "right":
-            return math.hypot(self.game.player.rect.right - self.nearestEnemy.rect.left, self.game.player.rect.y - self.nearestEnemy.rect.y)
-        elif self.direction == "left":
-            return math.hypot(self.game.player.rect.left - self.nearestEnemy.rect.right, self.game.player.rect.y - self.nearestEnemy.rect.y)
+        try:
+            if self.direction == "right":
+                return math.hypot(self.game.player.rect.right - self.nearestEnemy.rect.left, self.game.player.rect.y - self.nearestEnemy.rect.y)
+            elif self.direction == "left":
+                return math.hypot(self.game.player.rect.left - self.nearestEnemy.rect.right, self.game.player.rect.y - self.nearestEnemy.rect.y)
+        except AttributeError:
+            return float('inf')
 
     def climbing(self):
         #sprawdzamy czy gracz ma mozliwosc skoku
@@ -417,11 +431,25 @@ class Player(pygame.sprite.Sprite):
         self.getHitCounter -=1
         if self.direction == "right":
             self.image = pygame.transform.flip(self.images["getHit"],True,False)
-            self.rect = self.image.get_rect(topleft=(self.current_left,self.current_top))
+            self.rect = self.image.get_rect(topright=(self.current_right,self.current_top))
         elif self.direction == "left":
             self.image = self.images["getHit"]
-            self.rect = self.image.get_rect(topright=(self.current_right,self.current_top))
+            self.rect = self.image.get_rect(topleft=(self.current_left,self.current_top))
 
+    def dead(self):
+        self.isDead = True
+        self.deadCounter += 0.1
+        if self.deadCounter >7:
+            self.deadCounter = 6
+            self.game.gameOver = True
+
+        if self.direction == "right":
+            self.image = pygame.transform.flip(self.images[f"dying{int(self.deadCounter)}"],True,False)
+            self.rect = self.image.get_rect(bottomleft=(self.current_left,self.current_bottom))
+        elif self.direction == "left":
+
+            self.image = self.images[f"dying{int(self.deadCounter)}"]
+            self.rect = self.image.get_rect(bottomright=(self.current_right,self.current_bottom))
 
     def update(self):
         #reset oraz dodawanie do wartosci
@@ -445,70 +473,73 @@ class Player(pygame.sprite.Sprite):
             if self.vel_y > 10:
                 self.vel_y = 10
 
-        if self.getHitCounter > 0:
-            self.getHit()
+        if self.game.ui.playerLifes <1:
+            self.dead()
         else:
-        #poruszanie sie postacia
-        #w prawo
-            if keys[pygame.K_RIGHT] and not self.climb:
-                self.direction = "right"
-                self.walking()
+            if self.getHitCounter > 0:
+                self.getHit()
+            else:
+            #poruszanie sie postacia
+            #w prawo
+                if keys[pygame.K_RIGHT] and not self.climb:
+                    self.direction = "right"
+                    self.walking()
 
-            #w lewo
-            if keys[pygame.K_LEFT] and not self.climb:
-                self.direction = "left"
-                self.walking()
+                #w lewo
+                if keys[pygame.K_LEFT] and not self.climb:
+                    self.direction = "left"
+                    self.walking()
 
 
 
-            #jesli postac przestanie isc
-            if not self.walk and not self.climb and not self.attack:
-                self.standing()
+                #jesli postac przestanie isc
+                if not self.walk and not self.climb and not self.attack:
+                    self.standing()
 
-            #wspinanie sie
-            if keys[pygame.K_UP]:
-                if self.attack:
-                    self.defend = True
+                #wspinanie sie
+                if keys[pygame.K_UP]:
+                    if self.attack:
+                        self.defend = True
+                    else:
+                        self.climbing()
                 else:
-                    self.climbing()
-            else:
-                self.climbCounter = 1
-                self.climb = False
+                    self.climbCounter = 1
+                    self.climb = False
 
-            # kucniecie
-            if keys[pygame.K_DOWN] and not self.climb:
-                self.crouch = True
-            elif self.crouchUPColision:
-                self.crouch = True
-            else:
-                self.crouchCounter = 1
-            if self.crouch and not self.climb:
-                self.crouching()
+                # kucniecie
+                if keys[pygame.K_DOWN] and not self.climb:
+                    self.crouch = True
+                elif self.crouchUPColision:
+                    self.crouch = True
+                else:
+                    self.crouchCounter = 1
+                if self.crouch and not self.climb:
+                    self.crouching()
 
-            self.crouchUPColision = self.crouchCollisionLeft = self.crouchCollisionRight = False
+                self.crouchUPColision = self.crouchCollisionLeft = self.crouchCollisionRight = False
 
-            #skok
-            if keys[pygame.K_SPACE] and not self.jump and self.jumpCounter > 35 and not self.climb and not self.crouch and not self.attack:
-                self.vel_y = -self.SPEED * 2.5
-                self.jumpCounter = 0
-                self.jump = True
-            if not keys[pygame.K_SPACE]:
-                self.jump = False
+                #skok
+                if keys[pygame.K_SPACE] and not self.jump and self.jumpCounter > 35 and not self.climb and not self.crouch and not self.attack:
+                    self.vel_y = -self.SPEED * 2.5
+                    self.jumpCounter = 0
+                    self.jump = True
+                if not keys[pygame.K_SPACE]:
+                    self.jump = False
 
-            #atak
-            if keys[pygame.K_LCTRL]:
-                if self.direction == "right" and not self.collisionRight and not self.pickUpSwordCollisionRight:
-                    self.attack = True
-                elif self.direction == "left" and not self.collisionLeft and not self.pickUpSwordCollisionLeft:
-                    self.attack = True
-            if keys[pygame.K_RCTRL]:
-                self.attack = False
+                #atak
+                if keys[pygame.K_LCTRL]:
+                    if self.direction == "right" and not self.collisionRight and not self.pickUpSwordCollisionRight:
+                        self.attack = True
+                    elif self.direction == "left" and not self.collisionLeft and not self.pickUpSwordCollisionLeft:
+                        self.attack = True
+                if keys[pygame.K_RCTRL]:
+                    self.attack = False
 
-            if self.attack and keys[pygame.K_SPACE] and self.hitGapCounter > 100:
-                self.hit = True
-                self.hitGapCounter = 0
+                if self.attack and keys[pygame.K_SPACE] and self.hitGapCounter > 100:
+                    self.hit = True
+                    self.hitGapCounter = 0
 
-            self.attacking()
+                self.attacking()
         #wykrywanie kolizji z przedmiotami
         for tile in self.game.tileHandler.tileMap:
             f_recY = pygame.Rect(self.rect.x,self.rect.y + self.vel_y,self.rect.width,self.rect.height)

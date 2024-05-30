@@ -14,6 +14,8 @@ class Game:
         self.FPS = 60
         self.window = pygame.display.set_mode((self.WIDTH,self.HEIGHT))
 
+        self.gameOver = False
+
         #inicjalizacja obiektow
         self.player = Player(self,100,100)
 
@@ -38,11 +40,14 @@ class Game:
         #rysujemy mape
         self.tileHandler.draw(self.window)
 
+        # rysujemy rzeczy na levelu
+        self.level.draw(self.window)
+
+
         #rysujemy statystyki
         self.ui.draw(self.window)
 
-        #rysujemy rzeczy na levelu
-        self.level.draw(self.window)
+
 
 
 

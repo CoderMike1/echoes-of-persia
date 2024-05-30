@@ -7,6 +7,7 @@ class UI:
     RED = (255,0,0)
     RECT_COLOR = (197,167,162)
     PURPLE = (109,50,168)
+    GRAY = (128,128,128)
 
     def __init__(self,game):
         self.game = game
@@ -47,12 +48,25 @@ class UI:
         # self.heartRect.x = self.game.WIDTH - 15
 
         #rysujemy czas trwania gry
-        currentTime = pygame.time.get_ticks() - self.startTime
-        seconds = (currentTime // 1000)%60
-        minutes = (currentTime // 1000) //60
+        if not self.game.gameOver:
+            currentTime = pygame.time.get_ticks() - self.startTime
+            self.seconds = (currentTime // 1000)%60
+            self.minutes = (currentTime // 1000) //60
+
+            time_text = self.font.render(f"{self.minutes:02}:{self.seconds:02}", True, self.BLACK)
+            surface.blit(time_text, (((self.game.WIDTH / 2) - (time_text.get_width() / 2), 45)))
+
+        else:
+            time_text = self.font.render(f"{self.minutes:02}:{self.seconds:02}", True, self.BLACK)
+            surface.blit(time_text, (((self.game.WIDTH / 2) - (time_text.get_width() / 2), 45)))
+
+            overlay = pygame.Surface(surface.get_size(), pygame.SRCALPHA)
+            overlay.fill((128,128,128,128))
+
+            surface.blit(overlay,(0,0))
 
 
-        time_text = self.font.render(f"{minutes:02}:{seconds:02}",True,self.BLACK)
-        surface.blit(time_text,(((self.game.WIDTH/2) - (time_text.get_width()/2),45)))
+
+
 
 
