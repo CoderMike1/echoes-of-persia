@@ -6,7 +6,7 @@ class Enemy(pygame.sprite.Sprite,abc.ABC):
     def __init__(self,game,lives,speed,enemyLevel,cx,cy,images,hitGapTime):
         super().__init__()
         self.game = game
-        self.enemyLives = lives
+        self.enemyLives = 1
         self.enemySpeed = speed
         self.images = images
         self.image = self.images[f"{enemyLevel}EnemyIdle"]
@@ -32,6 +32,10 @@ class Enemy(pygame.sprite.Sprite,abc.ABC):
         self.defendMode = False
         self.enemyDefendFlag = False
 
+        self.getHitCounter = 0
+
+        self.deadCounter = 1
+        self.isDead = False
 
 
 
@@ -49,6 +53,7 @@ class Enemy(pygame.sprite.Sprite,abc.ABC):
             return math.hypot(self.game.player.rect.left - self.rect.right, self.game.player.rect.y - self.rect.y)
         elif self.direction == "left":
             return math.hypot(self.game.player.rect.right - self.rect.left, self.game.player.rect.y - self.rect.y)
+
     def attacking(self):
         if self.defendMode:
             if self.direction == "right":
@@ -106,7 +111,14 @@ class Enemy(pygame.sprite.Sprite,abc.ABC):
                         self.images[f"{self.enemyLevel}EnemyAttack1"], True, False)
                     self.rect = self.image.get_rect(topright=(self.currentRight, self.currentTop))
 
-
+    def getHit(self):
+        self.getHitCounter -=1
+        if self.direction == "right":
+            self.image = self.images[f"{self.enemyLevel}EnemyGetHit"]
+            self.rect = self.image.get_rect(bottom=self.currentBottom)
+        elif self.direction == "left":
+            self.image = pygame.transform.flip(self.images[f"{self.enemyLevel}EnemyGetHit"],True,False)
+            self.rect = self.image.get_rect(bottom=self.currentBottom)
 
     def hitting(self):
         distance = self.checkDistance()
@@ -117,6 +129,8 @@ class Enemy(pygame.sprite.Sprite,abc.ABC):
             self.hitGapCounter = 0
             if distance < 50 and not self.game.player.defend:
                 print("player was hit")
+                self.game.ui.playerLifes -=1
+                self.game.player.getHitCounter = 20
 
         if self.direction == "right":
             self.vel_x = self.enemySpeed
@@ -134,8 +148,6 @@ class Enemy(pygame.sprite.Sprite,abc.ABC):
             else:
                 self.rect = self.image.get_rect(topleft=(self.currentLeft, self.currentTop))
 
-    def defending(self):
-        pass
 
     def patroling(self):
         if self.rect.left > self.game.player.rect.right:
@@ -153,8 +165,21 @@ class Enemy(pygame.sprite.Sprite,abc.ABC):
         if distance < 250:
             self.attackMode = True
 
+    def dead(self):
+        self.isDead = True
 
+        self.deadCounter += 0.1
+        if self.deadCounter > 8:
+            self.deadCounter = 7
 
+        if self.direction == "right":
+            self.image = self.images[f"{self.enemyLevel}EnemyDying{int(self.deadCounter)}"]
+            self.rect = self.image.get_rect(topleft=(self.currentLeft,self.currentTop))
+        elif self.direction == "left":
+            self.image = pygame.transform.flip(self.images[f"{self.enemyLevel}EnemyDying{int(self.deadCounter)}"],True,False)
+            self.rect = self.image.get_rect(topright=(self.currentRight,self.currentTop))
+
+        pass
 
     def update(self):
         self.currentLeft = self.rect.left
@@ -166,21 +191,27 @@ class Enemy(pygame.sprite.Sprite,abc.ABC):
         if self.vel_y > 10:
             self.vel_y = 10
 
-        if self.game.player.hit:
-            if self.enemyDefendFlag:
-                pass
+        if self.enemyLives < 1:
+            self.dead()
+        else:
+            if self.getHitCounter >0:
+                self.getHit()
             else:
-                self.enemyDefendFlag = True
-                self.defendMode = random.choice([True,False,False,False])
-        else:
-            self.defendMode = False
-            self.enemyDefendFlag = False
+                if self.game.player.hit:
+                    if self.enemyDefendFlag:
+                        pass
+                    else:
+                        self.enemyDefendFlag = True
+                        self.defendMode = random.choice([True,False,True])
+                else:
+                    self.defendMode = False
+                    self.enemyDefendFlag = False
 
-        #domyslnie patroluje
-        if self.attackMode:
-            self.attacking()
-        else:
-            self.patroling()
+                #domyslnie patroluje
+                if self.attackMode:
+                    self.attacking()
+                else:
+                    self.patroling()
 
 
         self.collisionLeft = self.collisionRight = False
@@ -229,7 +260,11 @@ class Enemy(pygame.sprite.Sprite,abc.ABC):
 
 class EnemyEasy(Enemy):
     def __init__(self,game,cx,cy):
-        super().__init__(game,3,2,"easy",cx,cy,self.loadImage(),200)
+        lives = 3
+        speed = 2
+        enemyLevel = "easy"
+        hitGapTime = 200
+        super().__init__(game,lives,speed,enemyLevel,cx,cy,self.loadImage(),hitGapTime)
     def loadImage(self):
         im = {}
         im.update({"easyEnemyIdle": self.pLoad("easyEnemyIdle")})
@@ -249,6 +284,16 @@ class EnemyEasy(Enemy):
         im.update({"easyEnemyHit2": self.pLoad("easyEnemyHit2")})
         im.update({"easyEnemyHit3": self.pLoad("easyEnemyHit3")})
         im.update({"easyEnemyHit4": self.pLoad("easyEnemyHit4")})
+
+        im.update({"easyEnemyGetHit": self.pLoad("easyEnemyGetHit")})
+
+        im.update({"easyEnemyDying1": self.pLoad("easyEnemyDying1")})
+        im.update({"easyEnemyDying2": self.pLoad("easyEnemyDying2")})
+        im.update({"easyEnemyDying3": self.pLoad("easyEnemyDying3")})
+        im.update({"easyEnemyDying4": self.pLoad("easyEnemyDying4")})
+        im.update({"easyEnemyDying5": self.pLoad("easyEnemyDying5")})
+        im.update({"easyEnemyDying6": self.pLoad("easyEnemyDying6")})
+        im.update({"easyEnemyDying7": self.pLoad("easyEnemyDying7")})
 
         return im
 

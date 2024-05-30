@@ -6,6 +6,8 @@ class UI:
     BLACK = (0, 0, 0)
     RED = (255,0,0)
     RECT_COLOR = (197,167,162)
+    PURPLE = (109,50,168)
+
     def __init__(self,game):
         self.game = game
         self.loadData()
@@ -17,6 +19,7 @@ class UI:
         self.font = pygame.font.SysFont("franklingothicdemi", 36)
         self.heartImage = pygame.transform.scale(pygame.image.load(os.path.join(self.path,'heart.png')).convert_alpha(),(30,35))
         self.heartRect = pygame.Rect(15,10,30,30)
+        self.enemyHeartRect = pygame.Rect(self.game.WIDTH - 15,10,30,30)
         self.startTime = pygame.time.get_ticks()
 
 
@@ -34,6 +37,14 @@ class UI:
             pygame.draw.rect(surface,self.RED,self.heartRect)
             self.heartRect.x += 50
         self.heartRect.x = 15
+
+
+
+        ##rysujemy poziom zycia przeciwnika
+        # for _ in self.game.level.enemies[0].enemyLives:
+        #     pygame.draw.rect(surface, self.PURPLE, self.enemyHeartRect)
+        #     self.enemyHeartRect.x -= 50
+        # self.heartRect.x = self.game.WIDTH - 15
 
         #rysujemy czas trwania gry
         currentTime = pygame.time.get_ticks() - self.startTime
