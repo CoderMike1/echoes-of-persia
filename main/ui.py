@@ -21,6 +21,7 @@ class UI:
         self.heartImage = pygame.transform.scale(pygame.image.load(os.path.join(self.path,'heart.png')).convert_alpha(),(30,35))
         self.heartRect = pygame.Rect(15,10,30,30)
         self.enemyHeartRect = pygame.Rect(self.game.WIDTH - 15,10,30,30)
+        self.enemyHeartRect.right = self.game.WIDTH - 15
         self.startTime = pygame.time.get_ticks()
 
 
@@ -42,10 +43,12 @@ class UI:
 
 
         ##rysujemy poziom zycia przeciwnika
-        # for _ in self.game.level.enemies[0].enemyLives:
-        #     pygame.draw.rect(surface, self.PURPLE, self.enemyHeartRect)
-        #     self.enemyHeartRect.x -= 50
-        # self.heartRect.x = self.game.WIDTH - 15
+        for enemy in self.game.level.enemies:
+            if enemy.currentMap == self.game.level.currentMap:
+                for _ in range(enemy.enemyLives):
+                    pygame.draw.rect(surface, self.PURPLE, self.enemyHeartRect)
+                    self.enemyHeartRect.x -= 50
+                self.enemyHeartRect.right = self.game.WIDTH - 15
 
         #rysujemy czas trwania gry
         if not self.game.gameOver:

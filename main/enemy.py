@@ -3,7 +3,7 @@ import pygame,os,abc,math,random
 class Enemy(pygame.sprite.Sprite,abc.ABC):
     path = os.path.join(os.path.dirname(os.getcwd()), 'images', 'enemy')
     ENEMY_SCALE = 3
-    def __init__(self,game,lives,speed,enemyLevel,cx,cy,images,hitGapTime):
+    def __init__(self,game,lives,speed,enemyLevel,cx,cy,images,hitGapTime,currentMap):
         super().__init__()
         self.game = game
         self.enemyLives = lives
@@ -15,6 +15,7 @@ class Enemy(pygame.sprite.Sprite,abc.ABC):
         self.rect.center = (cx,cy)
         self.vel_x = self.vel_y = 0
         self.enemyLevel = enemyLevel
+        self.currentMap = currentMap
 
         self.collisionLeft = False
         self.collisionRight = False
@@ -36,6 +37,9 @@ class Enemy(pygame.sprite.Sprite,abc.ABC):
 
         self.deadCounter = 1
         self.isDead = False
+
+        self.isSpeared = False
+        self.bladeX = None
 
 
 
@@ -128,7 +132,6 @@ class Enemy(pygame.sprite.Sprite,abc.ABC):
             self.hitMode = False
             self.hitGapCounter = 0
             if distance < 50 and not self.game.player.defend:
-                print("player was hit")
                 self.game.ui.playerLifes -=1
                 self.game.player.getHitCounter = 20
 
@@ -179,7 +182,16 @@ class Enemy(pygame.sprite.Sprite,abc.ABC):
             self.image = pygame.transform.flip(self.images[f"{self.enemyLevel}EnemyDying{int(self.deadCounter)}"],True,False)
             self.rect = self.image.get_rect(topright=(self.currentRight,self.currentTop))
 
-        pass
+
+    def speared(self):
+        self.isDead = self.isSpeared = True
+        self.enemyLives = 0
+        if self.direction == "right":
+            self.image = self.images[f"easyEnemySpeared"]
+            self.rect = self.image.get_rect(topleft=(self.bladeX,self.currentTop))
+        elif self.direction == "left":
+            self.image = pygame.transform.flip(self.images[f"easyEnemySpeared"],True,False)
+            self.rect = self.image.get_rect(topright=(self.bladeX,self.currentTop))
 
     def update(self):
         self.currentLeft = self.rect.left
@@ -191,8 +203,10 @@ class Enemy(pygame.sprite.Sprite,abc.ABC):
         if self.vel_y > 10:
             self.vel_y = 10
 
-        if self.enemyLives < 1:
+        if self.enemyLives < 1 and not self.isSpeared:
             self.dead()
+        elif self.enemyLives <1 and self.isSpeared:
+            self.speared()
         else:
             if self.getHitCounter >0:
                 self.getHit()
@@ -213,6 +227,11 @@ class Enemy(pygame.sprite.Sprite,abc.ABC):
                 else:
                     self.patroling()
 
+        #wykrywamy czy enemy przechodzi do innej klatki mapy
+        if self.rect.left < 0:
+            self.currentMap -=1
+        if self.rect.right > self.game.WIDTH:
+            self.currentMap +=1
 
         self.collisionLeft = self.collisionRight = False
 
@@ -259,12 +278,12 @@ class Enemy(pygame.sprite.Sprite,abc.ABC):
         surface.blit(self.image,self.rect)
 
 class EnemyEasy(Enemy):
-    def __init__(self,game,cx,cy):
+    def __init__(self,game,cx,cy,currentMap):
         lives = 3
         speed = 2
         enemyLevel = "easy"
         hitGapTime = 200
-        super().__init__(game,lives,speed,enemyLevel,cx,cy,self.loadImage(),hitGapTime)
+        super().__init__(game,lives,speed,enemyLevel,cx,cy,self.loadImage(),hitGapTime,currentMap)
     def loadImage(self):
         im = {}
         im.update({"easyEnemyIdle": self.pLoad("easyEnemyIdle")})
@@ -294,6 +313,8 @@ class EnemyEasy(Enemy):
         im.update({"easyEnemyDying5": self.pLoad("easyEnemyDying5")})
         im.update({"easyEnemyDying6": self.pLoad("easyEnemyDying6")})
         im.update({"easyEnemyDying7": self.pLoad("easyEnemyDying7")})
+
+        im.update({"easyEnemySpeared": self.pLoad("easyEnemySpeared")})
 
         return im
 

@@ -19,13 +19,29 @@ class Level(abc.ABC):
             self.game.tileHandler.loadMap(f"level{level}/map{self.currentMap}.txt")
             self.game.player.rect.left = 0
 
+        for enemy in self.enemies:
+            if enemy.currentMap == self.currentMap:
+                enemy.update()
 
-        if self.game.ui.playerLifes < 1:
-            print("game over")
+        for trap in self.traps:
+            if trap.currentMap == self.currentMap:
+                trap.update()
+
+    def draw(self, surface):
+        for enemy in self.enemies:
+            if enemy.currentMap == self.currentMap:
+                enemy.draw(surface)
+
+        for trap in self.traps:
+            if trap.currentMap == self.currentMap:
+                trap.draw(surface)
 
 class Level1(Level):
     def __init__(self,game,currentMap):
         super().__init__(game,currentMap)
+
+        self.enemies.add(EnemyEasy(game,200,0,10))
+        self.traps.add(Blades(game, 300, 640,10))
 
 
     def getLevel(self):
@@ -46,7 +62,7 @@ class WorkingLevel(Level):
         super().__init__(game,currentMap)
 
 
-        #self.enemies.add(EnemyEasy(game,800,100))
+        self.enemies.add(EnemyEasy(game,800,100))
         self.traps.add(Blades(game,300,640))
 
 

@@ -55,6 +55,7 @@ class Player(pygame.sprite.Sprite):
         self.isDead = False
         self.deadCounter = 1
         self.isSpeared = False
+        self.bladeX = None
 
 
     def pLoad(self,fileName):
@@ -442,11 +443,11 @@ class Player(pygame.sprite.Sprite):
     def speared(self):
         self.isDead = self.isSpeared =True
         if self.direction == "right":
-            self.image = self.images["speared"]
-            self.rect = self.image.get_rect(bottomleft=(self.current_left,self.current_bottom))
-        elif self.direction == "left":
             self.image = pygame.transform.flip(self.images["speared"], True, False)
-            self.rect = self.image.get_rect(bottomright=(self.current_right,self.current_bottom))
+            self.rect = self.image.get_rect(bottomleft=(self.bladeX,self.current_bottom))
+        elif self.direction == "left":
+            self.image = self.images["speared"]
+            self.rect = self.image.get_rect(bottomright=(self.bladeX,self.current_bottom))
         self.game.gameOver = True
         self.game.ui.playerLifes = 0
     def dead(self):

@@ -19,8 +19,8 @@ class Game:
         #inicjalizacja obiektow
         self.player = Player(self,100,100)
 
-        #self.level = Level1(self,10)
-        self.level = WorkingLevel(self,11)
+        self.level = Level1(self,10)
+        #self.level = WorkingLevel(self,11)
 
         self.tileHandler = TileHandler(self)
 

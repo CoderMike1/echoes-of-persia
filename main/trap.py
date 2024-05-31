@@ -3,8 +3,8 @@ import pygame,abc,os
 class Trap(abc.ABC):
     path = os.path.join(os.path.dirname(os.getcwd()), 'images', 'trap')
     TRAP_SCALE = 3
-    def __init__(self):
-        super().__init__()
+    def __init__(self,currentMap):
+        self.currentMap = currentMap
 
     @abc.abstractmethod
     def loadImage(self):
@@ -25,9 +25,9 @@ class Trap(abc.ABC):
 
 
 class Blades(pygame.sprite.Sprite,Trap):
-    def __init__(self,game,pX,pY):
-        super().__init__()
-
+    def __init__(self,game,pX,pY,currentMap):
+        pygame.sprite.Sprite.__init__(self)
+        Trap.__init__(self,currentMap=currentMap)
         self.game = game
         self.images = self.loadImage()
         self.image = self.images["blade1"]
@@ -78,12 +78,30 @@ class Blades(pygame.sprite.Sprite,Trap):
 
             self.gapTimeCounter +=1
 
-            if self.rect.colliderect(self.game.player.rect) and self.hitMode:
+            for enemy in self.game.level.enemies:
+                if enemy.rect.colliderect(self.rect) and self.hitMode:
+                    if enemy.direction == "right":
+                        enemy.bladeX = self.rect.left
+                    elif enemy.direction == "left":
+                        enemy.bladeX = self.rect.right
+                    enemy.speared()
+                    self.gapTimeCounter = -15
+                    self.hitMode = False
+
+
+            if self.rect.colliderect(self.game.player.rect) and self.hitMode and self.gapTimeCounter != -15:
+                if self.game.player.direction == "right":
+                    self.game.player.bladeX = self.rect.left
+                elif self.game.player.direction == "left":
+                    self.game.player.bladeX = self.rect.right
                 self.game.player.speared()
 
 
 
+
+
+
+
     def draw(self,surface):
-        #pygame.draw.rect(surface,(0,0,0,0),self.rect)
         surface.blit(self.image,self.rect)
 
