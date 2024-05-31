@@ -54,6 +54,7 @@ class Player(pygame.sprite.Sprite):
 
         self.isDead = False
         self.deadCounter = 1
+        self.isSpeared = False
 
 
     def pLoad(self,fileName):
@@ -145,6 +146,8 @@ class Player(pygame.sprite.Sprite):
         im.update({"dying4": self.pLoad("dying4")})
         im.update({"dying5": self.pLoad("dying5")})
         im.update({"dying6": self.pLoad("dying6")})
+
+        im.update({"speared": self.pLoad("speared")})
 
 
         return im
@@ -436,6 +439,16 @@ class Player(pygame.sprite.Sprite):
             self.image = self.images["getHit"]
             self.rect = self.image.get_rect(topleft=(self.current_left,self.current_top))
 
+    def speared(self):
+        self.isDead = self.isSpeared =True
+        if self.direction == "right":
+            self.image = self.images["speared"]
+            self.rect = self.image.get_rect(bottomleft=(self.current_left,self.current_bottom))
+        elif self.direction == "left":
+            self.image = pygame.transform.flip(self.images["speared"], True, False)
+            self.rect = self.image.get_rect(bottomright=(self.current_right,self.current_bottom))
+        self.game.gameOver = True
+        self.game.ui.playerLifes = 0
     def dead(self):
         self.isDead = True
         self.deadCounter += 0.1
@@ -464,7 +477,6 @@ class Player(pygame.sprite.Sprite):
         self.current_bottom = self.rect.bottom
         self.current_top = self.rect.top
 
-
         keys = pygame.key.get_pressed()
 
         if not self.climb:
@@ -472,9 +484,10 @@ class Player(pygame.sprite.Sprite):
             self.vel_y +=1
             if self.vel_y > 10:
                 self.vel_y = 10
-
-        if self.game.ui.playerLifes <1:
+        if self.game.ui.playerLifes <1 and not self.isSpeared:
             self.dead()
+        elif self.game.ui.playerLifes <1 and self.isSpeared:
+            self.speared()
         else:
             if self.getHitCounter > 0:
                 self.getHit()

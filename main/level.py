@@ -1,11 +1,13 @@
 
 import pygame,abc
 from enemy import EnemyEasy
+from trap import Blades
 class Level(abc.ABC):
     def __init__(self,game,currentMap):
         self.game = game
         self.currentMap = currentMap
         self.enemies = pygame.sprite.Group()
+        self.traps = pygame.sprite.Group()
     def update(self,level):
         if self.game.player.rect.left < 0:
             self.currentMap -=1
@@ -44,7 +46,10 @@ class WorkingLevel(Level):
         super().__init__(game,currentMap)
 
 
-        self.enemies.add(EnemyEasy(game,800,100))
+        #self.enemies.add(EnemyEasy(game,800,100))
+        self.traps.add(Blades(game,300,640))
+
+
 
 
     def getLevel(self):
@@ -54,6 +59,12 @@ class WorkingLevel(Level):
         for enemy in self.enemies:
             enemy.update()
 
+        for trap in self.traps:
+            trap.update()
+
     def draw(self,surface):
         for enemy in self.enemies:
             enemy.draw(surface)
+
+        for trap in self.traps:
+            trap.draw(surface)

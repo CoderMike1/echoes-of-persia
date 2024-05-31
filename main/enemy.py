@@ -115,10 +115,10 @@ class Enemy(pygame.sprite.Sprite,abc.ABC):
         self.getHitCounter -=1
         if self.direction == "right":
             self.image = self.images[f"{self.enemyLevel}EnemyGetHit"]
-            self.rect = self.image.get_rect(bottom=self.currentBottom)
+            self.rect = self.image.get_rect(topleft=(self.currentLeft,self.currentTop))
         elif self.direction == "left":
             self.image = pygame.transform.flip(self.images[f"{self.enemyLevel}EnemyGetHit"],True,False)
-            self.rect = self.image.get_rect(bottom=self.currentBottom)
+            self.rect = self.image.get_rect(topright=(self.currentRight,self.currentTop))
 
     def hitting(self):
         distance = self.checkDistance()
