@@ -17,14 +17,14 @@ class Game:
         self.gameOver = False
 
         #inicjalizacja obiektow
-        self.player = Player(self,100,100)
+        self.player = Player(self,400,14*48)
 
-        self.level = Level1(self,10)
-        #self.level = WorkingLevel(self,11)
+        #self.level = Level1(self,10)
+        self.level = WorkingLevel(self,11)
 
         self.tileHandler = TileHandler(self)
 
-        self.tileHandler.loadMap("level1/map10.txt")
+        self.tileHandler.loadMap("level1/map11.txt")
         self.tileHandler.loadMap(f"level{self.level.getLevel()}/map{self.level.currentMap}.txt")
 
         self.ui = UI(self)

@@ -40,7 +40,7 @@ class Level1(Level):
     def __init__(self,game,currentMap):
         super().__init__(game,currentMap)
 
-        self.enemies.add(EnemyEasy(game,200,0,10))
+        self.enemies.add(EnemyEasy(game,400,6*48,11))
         self.traps.add(Blades(game, 300, 640,10))
 
 
@@ -62,8 +62,8 @@ class WorkingLevel(Level):
         super().__init__(game,currentMap)
 
 
-        self.enemies.add(EnemyEasy(game,800,100))
-        self.traps.add(Blades(game,300,640))
+        # self.enemies.add(EnemyEasy(game,800,100))
+        # self.traps.add(Blades(game,300,640))
 
 
 
