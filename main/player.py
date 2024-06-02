@@ -27,6 +27,8 @@ class Player(pygame.sprite.Sprite):
 
         self.climbCounter = 1
         self.climb = False
+        self.climb4blockFlag = False
+        self.amountblocksWall = 0
 
 
         self.crouch = False
@@ -181,26 +183,38 @@ class Player(pygame.sprite.Sprite):
 
         for tile in self.game.tileHandler.tileMap:
             # I czy nie ma blokow nad soba
-            if tile.rect.colliderect((self.rect.x,self.rect.y - self.game.PIXEL_SIZE,self.rect.width,self.rect.height)):
+            if tile.rect.colliderect((self.rect.x,self.rect.top - self.game.PIXEL_SIZE,self.rect.width,self.rect.height)):
                 return False
             #II czy obok siebie ma dwa bloki
             if self.direction == "right":
-                if tile.rect.colliderect((self.rect.x+self.game.PIXEL_SIZE,self.rect.y - self.game.PIXEL_SIZE,self.rect.width,self.rect.height)):
-                    pass
-                if tile.rect.colliderect((self.rect.x + self.game.PIXEL_SIZE, self.rect.y - self.game.PIXEL_SIZE*2, self.rect.width,self.rect.height)):
-                    check2 = True
-                    check1 = True
+                if tile.rect.colliderect((self.rect.x + self.game.PIXEL_SIZE, self.rect.y - (self.game.PIXEL_SIZE*2),
+                                          self.rect.width, self.rect.height)):
+                    check2 = check1 = True
                     leftWall = tile.rect.left
                     bottomWall = tile.rect.bottom
-                if tile.rect.colliderect((self.rect.x + self.game.PIXEL_SIZE, self.rect.y - (self.game.PIXEL_SIZE*4), self.rect.width,self.rect.height)):
-                    check3 = False
+                    if not self.climb4blockFlag:
+                        self.amountblocksWall = 3
+                    if tile.rect.colliderect(self.rect.x + self.game.PIXEL_SIZE, self.rect.y - (self.game.PIXEL_SIZE * 3),self.rect.width, self.rect.height):
+                        self.climb4blockFlag = True
+                        self.amountblocksWall = 4
+                    if tile.rect.colliderect(
+                            (self.rect.x + self.game.PIXEL_SIZE, self.rect.y - (self.game.PIXEL_SIZE * 4),
+                             self.rect.width, self.rect.height)):
+                        check3 = False
+
             elif self.direction == "left":
-                if tile.rect.colliderect((self.rect.x - self.game.PIXEL_SIZE, self.rect.y - self.game.PIXEL_SIZE*2,
+                if tile.rect.colliderect((self.rect.x - self.game.PIXEL_SIZE, self.rect.y - (self.game.PIXEL_SIZE*2),
                                           self.rect.width, self.rect.height)):
-                    check2 = True
-                    check1 = True
+                    check2 = check1 = True
                     rightWall = tile.rect.right
                     bottomWall = tile.rect.bottom
+                    if not self.climb4blockFlag:
+                        self.amountblocksWall = 3
+                    if tile.rect.colliderect(
+                            (self.rect.x - self.game.PIXEL_SIZE, self.rect.y - (self.game.PIXEL_SIZE * 3),
+                             self.rect.width, self.rect.height)):
+                        self.climb4blockFlag = True
+                        self.amountblocksWall = 4
                 if tile.rect.colliderect((self.rect.x - self.game.PIXEL_SIZE, self.rect.y - (self.game.PIXEL_SIZE * 4),
                                           self.rect.width, self.rect.height)):
                     check3 = False
@@ -209,26 +223,51 @@ class Player(pygame.sprite.Sprite):
             self.climb = True
             self.vel_y = 0
             # jesli jest mozliwosc do wspinaczki -> wspinamy sie
+            if self.amountblocksWall == 3:
+                self.climbCounter += 0.1
+                if 10 < int(self.climbCounter) < 16:
+                    self.vel_y -= 0.5
+                if int(self.climbCounter) >= 16:
+                    self.vel_y -= 0.8
 
-            self.climbCounter += 0.1
-            if 10 < int(self.climbCounter) < 18:
-                self.vel_y -=1
+                if self.direction == "right":
+                    if int(self.climbCounter) > 18:
+                        self.rect = self.image.get_rect(bottom=bottomWall - self.game.PIXEL_SIZE,
+                                                        right=self.rect.right + self.game.PIXEL_SIZE)
+                        self.climb = False
+                    else:
+                        self.image = pygame.transform.flip(self.images[f"climb{int(self.climbCounter)}"], True, False)
+                        self.rect = self.image.get_rect(right=leftWall, top=self.rect.top, bottom=self.rect.bottom)
 
-            if self.direction == "right":
-                if int(self.climbCounter) >18:
-                    self.rect = self.image.get_rect(bottom=bottomWall-self.game.PIXEL_SIZE,right=self.rect.right+self.game.PIXEL_SIZE)
-                    self.climb = False
-                else:
-                    self.image = pygame.transform.flip(self.images[f"climb{int(self.climbCounter)}"],True,False)
-                    self.rect = self.image.get_rect(right=leftWall,top=self.rect.top,bottom=self.rect.bottom)
+                elif self.direction == "left":
+                    if int(self.climbCounter) > 18:
+                        self.rect = self.image.get_rect(bottom=bottomWall + self.game.PIXEL_SIZE,
+                                                        right=self.rect.right - self.game.PIXEL_SIZE)
+                        self.climb = False
+                    else:
+                        self.image = self.images[f"climb{int(self.climbCounter)}"]
+                        self.rect = self.image.get_rect(left=rightWall, top=self.rect.top, bottom=self.rect.bottom)
+            if self.amountblocksWall == 4:
+                self.climbCounter += 0.1
+                if 10 < int(self.climbCounter) < 18:
+                    self.vel_y -=1
+                if self.direction == "right":
+                    if int(self.climbCounter) >18:
+                        self.rect = self.image.get_rect(bottom=bottomWall-self.game.PIXEL_SIZE,right=self.rect.right+self.game.PIXEL_SIZE)
+                        self.climb = False
+                        self.climb4blockFlag = False
+                    else:
+                        self.image = pygame.transform.flip(self.images[f"climb{int(self.climbCounter)}"],True,False)
+                        self.rect = self.image.get_rect(right=leftWall,top=self.rect.top,bottom=self.rect.bottom)
 
-            elif self.direction == "left":
-                if int(self.climbCounter) >18:
-                    self.rect = self.image.get_rect(bottom=bottomWall+self.game.PIXEL_SIZE,right=self.rect.right-self.game.PIXEL_SIZE)
-                    self.climb = False
-                else:
-                    self.image =self.images[f"climb{int(self.climbCounter)}"]
-                    self.rect = self.image.get_rect(left=rightWall,top=self.rect.top,bottom=self.rect.bottom)
+                elif self.direction == "left":
+                    if int(self.climbCounter) >18:
+                        self.rect = self.image.get_rect(bottom=bottomWall+self.game.PIXEL_SIZE,right=self.rect.right-self.game.PIXEL_SIZE)
+                        self.climb = False
+                        self.climb4blockFlag = False
+                    else:
+                        self.image =self.images[f"climb{int(self.climbCounter)}"]
+                        self.rect = self.image.get_rect(left=rightWall,top=self.rect.top,bottom=self.rect.bottom)
 
 
     def walking(self):

@@ -17,7 +17,7 @@ class Game:
         self.gameOver = False
 
         #inicjalizacja obiektow
-        self.player = Player(self,400,14*48)
+        self.player = Player(self,6*48,14*48)
 
         #self.level = Level1(self,10)
         self.level = WorkingLevel(self,11)
