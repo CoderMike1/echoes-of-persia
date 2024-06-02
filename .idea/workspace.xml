@@ -6,19 +6,12 @@
   <component name="ChangeListManager">
     <list default="true" id="57c80249-bcde-482e-9322-137aab12f7fd" name="Changes" comment="dodano prawidlowy image do player">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/enemy/easyEnemyAttack5.png" beforeDir="false" afterPath="$PROJECT_DIR$/images/enemy/easyEnemyAttack5.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/enemy/easyEnemyAttack6.png" beforeDir="false" afterPath="$PROJECT_DIR$/images/enemy/easyEnemyAttack6.png" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/images/maps/level1/map11.txt" beforeDir="false" afterPath="$PROJECT_DIR$/images/maps/level1/map11.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/images/player/climb19.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/images/player/climb20.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/images/player/climb21.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/images/player/climb22.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/images/player/climb23.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/images/player/climb24.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/images/player/climb25.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/images/player/climb26.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/images/player/climb27.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/images/player/climb28.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/images/player/climb29.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/images/player/climb30.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/main/enemy.py" beforeDir="false" afterPath="$PROJECT_DIR$/main/enemy.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/main/game.py" beforeDir="false" afterPath="$PROJECT_DIR$/main/game.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/main/level.py" beforeDir="false" afterPath="$PROJECT_DIR$/main/level.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/main/player.py" beforeDir="false" afterPath="$PROJECT_DIR$/main/player.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -63,7 +56,7 @@
   &quot;keyToString&quot;: {
     &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
     &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;newWork&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;enemyWork&quot;,
     &quot;last_opened_file_path&quot;: &quot;C:/Users/michał/Desktop/STUDIA/IV SEMESTR/OBIEKTOWE_GRA_PROJEKT/images/maps&quot;,
     &quot;settings.editor.selected.configurable&quot;: &quot;advanced.settings&quot;
   }
@@ -121,13 +114,55 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
+    <configuration name="enemy" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="OBIEKTOWE_GRA_PROJEKT" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/main" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/main/enemy.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration name="player" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="OBIEKTOWE_GRA_PROJEKT" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/main" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/main/player.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
     <recent_temporary>
       <list>
         <item itemvalue="Python.__init__" />
+        <item itemvalue="Python.player" />
+        <item itemvalue="Python.enemy" />
         <item itemvalue="Python.Main" />
         <item itemvalue="Python.Main" />
-        <item itemvalue="Python.__init__" />
-        <item itemvalue="Python.__init__" />
       </list>
     </recent_temporary>
   </component>
