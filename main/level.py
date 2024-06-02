@@ -2,12 +2,14 @@
 import pygame,abc
 from enemy import EnemyEasy
 from trap import Blades
+from tileHandler import healPotion
 class Level(abc.ABC):
     def __init__(self,game,currentMap):
         self.game = game
         self.currentMap = currentMap
         self.enemies = pygame.sprite.Group()
         self.traps = pygame.sprite.Group()
+        self.potions = pygame.sprite.Group()
     def update(self,level):
         if self.game.player.rect.left < 0:
             self.currentMap -=1
@@ -65,6 +67,10 @@ class WorkingLevel(Level):
         # self.enemies.add(EnemyEasy(game,800,100))
         # self.traps.add(Blades(game,300,640))
 
+        self.potions.add(healPotion(12*48,672-44,11))
+
+
+
 
 
 
@@ -84,3 +90,6 @@ class WorkingLevel(Level):
 
         for trap in self.traps:
             trap.draw(surface)
+
+        for potion in self.potions:
+            potion.draw(surface)

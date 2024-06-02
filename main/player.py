@@ -59,6 +59,10 @@ class Player(pygame.sprite.Sprite):
         self.isSpeared = False
         self.bladeX = None
 
+        self.getPotionMode = False
+        self.getPotionCounter = 1
+
+
 
     def pLoad(self,fileName):
         i = pygame.image.load(os.path.join(self.path,fileName+".png")).convert_alpha()
@@ -151,6 +155,23 @@ class Player(pygame.sprite.Sprite):
         im.update({"dying6": self.pLoad("dying6")})
 
         im.update({"speared": self.pLoad("speared")})
+
+        im.update({"getPotion1":self.pLoad("getPotion1")})
+        im.update({"getPotion2": self.pLoad("getPotion2")})
+        im.update({"getPotion3": self.pLoad("getPotion3")})
+        im.update({"getPotion4": self.pLoad("getPotion4")})
+        im.update({"getPotion5": self.pLoad("getPotion6")})
+        im.update({"getPotion6": self.pLoad("getPotion5")})
+        im.update({"getPotion7": self.pLoad("getPotion6")})
+        im.update({"getPotion8": self.pLoad("getPotion7")})
+        im.update({"getPotion9": self.pLoad("getPotion8")})
+        im.update({"getPotion10": self.pLoad("getPotion9")})
+        im.update({"getPotion11": self.pLoad("getPotion10")})
+        im.update({"getPotion12": self.pLoad("getPotion11")})
+        im.update({"getPotion13": self.pLoad("getPotion12")})
+        im.update({"getPotion14": self.pLoad("getPotion13")})
+
+
 
 
         return im
@@ -479,6 +500,19 @@ class Player(pygame.sprite.Sprite):
             self.image = self.images["getHit"]
             self.rect = self.image.get_rect(topleft=(self.current_left,self.current_top))
 
+    def getPotion(self):
+        if self.getPotionMode:
+            self.getPotionCounter += 0.1
+            if self.getPotionCounter > 15:
+                self.getPotionCounter = 1
+                self.getPotionMode = False
+                self.game.ui.playerLifes = self.game.ui.playerLifes + 1 if self.game.ui.playerLifes < self.game.ui.playerMaxLifes else self.game.ui.playerMaxLifes
+            if self.direction == "right":
+                self.image = pygame.transform.flip(self.images[f"getPotion{int(self.getPotionCounter)}"],True,False)
+                self.rect = self.image.get_rect(bottomleft=(self.current_left,self.current_bottom))
+            elif self.direction == "left":
+                self.image = self.images[f"getPotion{int(self.getPotionCounter)}"]
+                self.rect = self.image.get_rect(bottomright=(self.current_right,self.current_bottom))
     def speared(self):
         self.isDead = self.isSpeared =True
         if self.direction == "right":
@@ -546,7 +580,7 @@ class Player(pygame.sprite.Sprite):
 
 
                 #jesli postac przestanie isc
-                if not self.walk and not self.climb and not self.attack:
+                if not self.walk and not self.climb and not self.attack and not self.getPotionMode:
                     self.standing()
 
                 #wspinanie sie
@@ -571,8 +605,20 @@ class Player(pygame.sprite.Sprite):
 
                 self.crouchUPColision = self.crouchCollisionLeft = self.crouchCollisionRight = False
 
+                # podnoszenie eliksiru
+                for potion in self.game.level.potions:
+                    if self.direction == "right":
+                        if potion.rect.colliderect((self.rect.x + self.game.PIXEL_SIZE, self.rect.y, self.rect.width, self.rect.height)) and keys[pygame.K_SPACE] and not self.attack:
+                            self.getPotionMode = True
+                            potion.kill()
+
+                    elif self.direction == "left":
+                        if potion.rect.colliderect((self.rect.x - self.game.PIXEL_SIZE, self.rect.y, self.rect.width, self.rect.height)) and keys[pygame.K_SPACE] and not self.attack:
+                            self.getPotionMode = True
+                            potion.kill()
+
                 #skok
-                if keys[pygame.K_SPACE] and not self.jump and self.jumpCounter > 35 and not self.climb and not self.crouch and not self.attack:
+                if keys[pygame.K_SPACE] and not self.jump and self.jumpCounter > 35 and not self.climb and not self.crouch and not self.attack and not self.getPotionMode:
                     self.vel_y = -self.SPEED * 2.5
                     self.jumpCounter = 0
                     self.jump = True
@@ -592,6 +638,7 @@ class Player(pygame.sprite.Sprite):
                     self.hit = True
                     self.hitGapCounter = 0
 
+                self.getPotion()
                 self.attacking()
         #wykrywanie kolizji z przedmiotami
         for tile in self.game.tileHandler.tileMap:
@@ -644,6 +691,8 @@ class Player(pygame.sprite.Sprite):
                 elif self.vel_x < 0:
                     self.rect.left = enemy.rect.right
                     self.vel_x = 0
+
+
 
         #ruch
         self.rect.x += self.vel_x
