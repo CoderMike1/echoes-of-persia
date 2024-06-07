@@ -360,3 +360,45 @@ class EnemyMedium(Enemy):
         im.update({"mediumEnemySpeared": self.pLoad("mediumEnemySpeared")})
 
         return im
+
+class EnemyHard(Enemy):
+    def __init__(self,game,cx,cy,currentMap):
+        lives = 5
+        speed = 2.5
+        enemyLevel = "hard"
+        hitGapTime = 100
+        super().__init__(game,lives,speed,enemyLevel,cx,cy,self.loadImage(),hitGapTime,currentMap)
+
+    def loadImage(self):
+        im = {}
+        im.update({"hardEnemyIdle": self.pLoad("hardEnemyIdle")})
+
+        im.update({"hardEnemyAttack1": self.pLoad("hardEnemyAttack1")})
+        im.update({"hardEnemyAttack2": self.pLoad("hardEnemyAttack2")})
+        im.update({"hardEnemyAttack3": self.pLoad("hardEnemyAttack3")})
+        im.update({"hardEnemyAttack4": self.pLoad("hardEnemyAttack4")})
+        im.update({"hardEnemyAttack5": self.pLoad("hardEnemyAttack5")})
+        im.update({"hardEnemyAttack6": self.pLoad("hardEnemyAttack6")})
+        im.update({"hardEnemyAttack7": self.pLoad("hardEnemyAttack7")})
+        im.update({"hardEnemyAttack8": self.pLoad("hardEnemyAttack8")})
+
+        im.update({"hardEnemyDefend": self.pLoad("hardEnemyDefend")})
+
+        im.update({"hardEnemyHit1": self.pLoad("hardEnemyHit1")})
+        im.update({"hardEnemyHit2": self.pLoad("hardEnemyHit2")})
+        im.update({"hardEnemyHit3": self.pLoad("hardEnemyHit3")})
+        im.update({"hardEnemyHit4": self.pLoad("hardEnemyHit4")})
+
+        im.update({"hardEnemyGetHit": self.pLoad("hardEnemyGetHit")})
+
+        im.update({"hardEnemyDying1": self.pLoad("hardEnemyDying1")})
+        im.update({"hardEnemyDying2": self.pLoad("hardEnemyDying2")})
+        im.update({"hardEnemyDying3": self.pLoad("hardEnemyDying3")})
+        im.update({"hardEnemyDying4": self.pLoad("hardEnemyDying4")})
+        im.update({"hardEnemyDying5": self.pLoad("hardEnemyDying5")})
+        im.update({"hardEnemyDying6": self.pLoad("hardEnemyDying6")})
+        im.update({"hardEnemyDying7": self.pLoad("hardEnemyDying7")})
+
+        im.update({"hardEnemySpeared": self.pLoad("hardEnemySpeared")})
+
+        return im
