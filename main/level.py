@@ -1,6 +1,6 @@
 
 import pygame,abc
-from enemy import EnemyEasy
+from enemy import EnemyEasy,EnemyMedium
 from trap import Blades
 from tileHandler import healPotion
 class Level(abc.ABC):
@@ -64,14 +64,10 @@ class WorkingLevel(Level):
         super().__init__(game,currentMap)
 
 
-        # self.enemies.add(EnemyEasy(game,800,100))
-        # self.traps.add(Blades(game,300,640))
+        self.enemies.add(EnemyMedium(game,800,100,11))
+        #self.traps.add(Blades(game,300,640,11))
 
-        self.potions.add(healPotion(12*48,672-44,11))
-
-
-
-
+        #self.potions.add(healPotion(12*48,672-44,11))
 
 
     def getLevel(self):

@@ -31,6 +31,7 @@ class TileHandler(pygame.sprite.Sprite):
         super().__init__()
         self.game = game
         self.tileMap = []
+        self.background = pygame.image.load(os.path.join(self.pathMaps,'background1.png'))
         #self.all_sprites = pygame.sprite.Group()
 
 
@@ -55,6 +56,6 @@ class TileHandler(pygame.sprite.Sprite):
             row +=1
 
     def draw(self,surface):
+        surface.blit(self.background,(0,0))
         for tile in self.tileMap:
             tile.draw(surface)
-        pass

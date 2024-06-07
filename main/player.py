@@ -244,7 +244,7 @@ class Player(pygame.sprite.Sprite):
             self.climb = True
             self.vel_y = 0
             # jesli jest mozliwosc do wspinaczki -> wspinamy sie
-            if self.amountblocksWall == 3:
+            if self.amountblocksWall == 3 and not self.climb4blockFlag:
                 self.climbCounter += 0.1
                 if 10 < int(self.climbCounter) < 16:
                     self.vel_y -= 0.5

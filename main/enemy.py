@@ -187,10 +187,10 @@ class Enemy(pygame.sprite.Sprite,abc.ABC):
         self.isDead = self.isSpeared = True
         self.enemyLives = 0
         if self.direction == "right":
-            self.image = self.images[f"easyEnemySpeared"]
+            self.image = self.images[f"{self.enemyLevel}EnemySpeared"]
             self.rect = self.image.get_rect(topleft=(self.bladeX,self.currentTop))
         elif self.direction == "left":
-            self.image = pygame.transform.flip(self.images[f"easyEnemySpeared"],True,False)
+            self.image = pygame.transform.flip(self.images[f"{self.enemyLevel}EnemySpeared"],True,False)
             self.rect = self.image.get_rect(topright=(self.bladeX,self.currentTop))
 
     def update(self):
@@ -319,4 +319,44 @@ class EnemyEasy(Enemy):
         return im
 
 
+class EnemyMedium(Enemy):
+    def __init__(self,game,cx,cy,currentMap):
+        lives = 4
+        speed = 3
+        enemyLevel="medium"
+        hitGapTime = 150
+        super().__init__(game,lives,speed,enemyLevel,cx,cy,self.loadImage(),hitGapTime,currentMap)
 
+    def loadImage(self):
+        im = {}
+        im.update({"mediumEnemyIdle": self.pLoad("mediumEnemyIdle")})
+
+        im.update({"mediumEnemyAttack1": self.pLoad("mediumEnemyAttack1")})
+        im.update({"mediumEnemyAttack2": self.pLoad("mediumEnemyAttack2")})
+        im.update({"mediumEnemyAttack3": self.pLoad("mediumEnemyAttack3")})
+        im.update({"mediumEnemyAttack4": self.pLoad("mediumEnemyAttack4")})
+        im.update({"mediumEnemyAttack5": self.pLoad("mediumEnemyAttack5")})
+        im.update({"mediumEnemyAttack6": self.pLoad("mediumEnemyAttack6")})
+        im.update({"mediumEnemyAttack7": self.pLoad("mediumEnemyAttack7")})
+        im.update({"mediumEnemyAttack8": self.pLoad("mediumEnemyAttack8")})
+
+        im.update({"mediumEnemyDefend": self.pLoad("mediumEnemyDefend")})
+
+        im.update({"mediumEnemyHit1": self.pLoad("mediumEnemyHit1")})
+        im.update({"mediumEnemyHit2": self.pLoad("mediumEnemyHit2")})
+        im.update({"mediumEnemyHit3": self.pLoad("mediumEnemyHit3")})
+        im.update({"mediumEnemyHit4": self.pLoad("mediumEnemyHit4")})
+
+        im.update({"mediumEnemyGetHit": self.pLoad("mediumEnemyGetHit")})
+
+        im.update({"mediumEnemyDying1": self.pLoad("mediumEnemyDying1")})
+        im.update({"mediumEnemyDying2": self.pLoad("mediumEnemyDying2")})
+        im.update({"mediumEnemyDying3": self.pLoad("mediumEnemyDying3")})
+        im.update({"mediumEnemyDying4": self.pLoad("mediumEnemyDying4")})
+        im.update({"mediumEnemyDying5": self.pLoad("mediumEnemyDying5")})
+        im.update({"mediumEnemyDying6": self.pLoad("mediumEnemyDying6")})
+        im.update({"mediumEnemyDying7": self.pLoad("mediumEnemyDying7")})
+
+        im.update({"mediumEnemySpeared": self.pLoad("mediumEnemySpeared")})
+
+        return im
