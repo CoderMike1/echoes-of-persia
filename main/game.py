@@ -3,6 +3,7 @@ from player import Player
 from tileHandler import TileHandler
 from level import Level1,Level2,WorkingLevel
 from ui import UI
+from sound import Sound
 class Game:
     LIGHTBLUE = pygame.color.THECOLORS['lightblue']
     def __init__(self):
@@ -14,17 +15,19 @@ class Game:
         self.FPS = 60
         self.window = pygame.display.set_mode((self.WIDTH,self.HEIGHT))
 
+        self.sounds = Sound()
+
         self.gameOver = False
 
         #inicjalizacja obiektow
-        self.player = Player(self,400,14*48)
+        self.player = Player(self,18*48,14*48)
 
         #self.level = Level1(self,10)
         self.level = WorkingLevel(self,11)
 
         self.tileHandler = TileHandler(self)
 
-        self.tileHandler.loadMap("level1/map11.txt")
+        #self.tileHandler.loadMap("level1/map11.txt")
         self.tileHandler.loadMap(f"level{self.level.getLevel()}/map{self.level.currentMap}.txt")
 
         self.ui = UI(self)
@@ -32,13 +35,15 @@ class Game:
 
 
     def draw(self):
-        self.window.fill(self.LIGHTBLUE)
+        # rysujemy mape
+        self.tileHandler.draw(self.window)
+
+        # rysujemy drzwi
+        self.level.door.draw(self.window)
 
         #rysujemy gracza
         self.player.draw(self.window)
 
-        #rysujemy mape
-        self.tileHandler.draw(self.window)
 
         # rysujemy rzeczy na levelu
         self.level.draw(self.window)

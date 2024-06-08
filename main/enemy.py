@@ -29,6 +29,7 @@ class Enemy(pygame.sprite.Sprite,abc.ABC):
         self.hitCounter = 1
         self.hitGap = hitGapTime
         self.hitGapCounter = hitGapTime+1
+        self.hitSoundFlag = False
 
         self.defendMode = False
         self.enemyDefendFlag = False
@@ -37,9 +38,11 @@ class Enemy(pygame.sprite.Sprite,abc.ABC):
 
         self.deadCounter = 1
         self.isDead = False
+        self.deadSoundFlag = False
 
         self.isSpeared = False
         self.bladeX = None
+        self.spearedSoundFlag = False
 
 
 
@@ -93,6 +96,7 @@ class Enemy(pygame.sprite.Sprite,abc.ABC):
                     else:
                         self.rect = self.image.get_rect(topleft=(self.currentLeft, self.currentTop))
             else:
+                print(self.collisionRight)
                 if self.direction == "right" and not self.collisionLeft:
                     self.attackCounter += 0.1
                     if self.attackCounter > 5:
@@ -131,9 +135,17 @@ class Enemy(pygame.sprite.Sprite,abc.ABC):
             self.hitCounter = 1
             self.hitMode = False
             self.hitGapCounter = 0
+            self.hitSoundFlag = False
             if distance < 50 and not self.game.player.defend:
                 self.game.ui.playerLifes -=1
                 self.game.player.getHitCounter = 20
+                if not self.hitSoundFlag:
+                    self.game.sounds.playSound("playerGetDamage")
+                    self.hitSoundFlag = True
+        if distance <50 and self.game.player.defend and self.hitCounter>1:
+            if not self.hitSoundFlag:
+                self.game.sounds.playSound("swordHit")
+                self.hitSoundFlag = True
 
         if self.direction == "right":
             self.vel_x = self.enemySpeed
@@ -174,6 +186,9 @@ class Enemy(pygame.sprite.Sprite,abc.ABC):
         self.deadCounter += 0.1
         if self.deadCounter > 8:
             self.deadCounter = 7
+            if not self.deadSoundFlag:
+                self.game.sounds.playSound("enemyDead")
+                self.deadSoundFlag = True
 
         if self.direction == "right":
             self.image = self.images[f"{self.enemyLevel}EnemyDying{int(self.deadCounter)}"]
@@ -185,12 +200,15 @@ class Enemy(pygame.sprite.Sprite,abc.ABC):
 
     def speared(self):
         self.isDead = self.isSpeared = True
+        if not self.spearedSoundFlag:
+            self.spearedSoundFlag = True
+            self.game.sounds.playSound("stabbed")
         self.enemyLives = 0
         if self.direction == "right":
-            self.image = self.images[f"easyEnemySpeared"]
+            self.image = self.images[f"{self.enemyLevel}EnemySpeared"]
             self.rect = self.image.get_rect(topleft=(self.bladeX,self.currentTop))
         elif self.direction == "left":
-            self.image = pygame.transform.flip(self.images[f"easyEnemySpeared"],True,False)
+            self.image = pygame.transform.flip(self.images[f"{self.enemyLevel}EnemySpeared"],True,False)
             self.rect = self.image.get_rect(topright=(self.bladeX,self.currentTop))
 
     def update(self):
@@ -319,4 +337,86 @@ class EnemyEasy(Enemy):
         return im
 
 
+class EnemyMedium(Enemy):
+    def __init__(self,game,cx,cy,currentMap):
+        lives = 4
+        speed = 3
+        enemyLevel="medium"
+        hitGapTime = 150
+        super().__init__(game,lives,speed,enemyLevel,cx,cy,self.loadImage(),hitGapTime,currentMap)
 
+    def loadImage(self):
+        im = {}
+        im.update({"mediumEnemyIdle": self.pLoad("mediumEnemyIdle")})
+
+        im.update({"mediumEnemyAttack1": self.pLoad("mediumEnemyAttack1")})
+        im.update({"mediumEnemyAttack2": self.pLoad("mediumEnemyAttack2")})
+        im.update({"mediumEnemyAttack3": self.pLoad("mediumEnemyAttack3")})
+        im.update({"mediumEnemyAttack4": self.pLoad("mediumEnemyAttack4")})
+        im.update({"mediumEnemyAttack5": self.pLoad("mediumEnemyAttack5")})
+        im.update({"mediumEnemyAttack6": self.pLoad("mediumEnemyAttack6")})
+        im.update({"mediumEnemyAttack7": self.pLoad("mediumEnemyAttack7")})
+        im.update({"mediumEnemyAttack8": self.pLoad("mediumEnemyAttack8")})
+
+        im.update({"mediumEnemyDefend": self.pLoad("mediumEnemyDefend")})
+
+        im.update({"mediumEnemyHit1": self.pLoad("mediumEnemyHit1")})
+        im.update({"mediumEnemyHit2": self.pLoad("mediumEnemyHit2")})
+        im.update({"mediumEnemyHit3": self.pLoad("mediumEnemyHit3")})
+        im.update({"mediumEnemyHit4": self.pLoad("mediumEnemyHit4")})
+
+        im.update({"mediumEnemyGetHit": self.pLoad("mediumEnemyGetHit")})
+
+        im.update({"mediumEnemyDying1": self.pLoad("mediumEnemyDying1")})
+        im.update({"mediumEnemyDying2": self.pLoad("mediumEnemyDying2")})
+        im.update({"mediumEnemyDying3": self.pLoad("mediumEnemyDying3")})
+        im.update({"mediumEnemyDying4": self.pLoad("mediumEnemyDying4")})
+        im.update({"mediumEnemyDying5": self.pLoad("mediumEnemyDying5")})
+        im.update({"mediumEnemyDying6": self.pLoad("mediumEnemyDying6")})
+        im.update({"mediumEnemyDying7": self.pLoad("mediumEnemyDying7")})
+
+        im.update({"mediumEnemySpeared": self.pLoad("mediumEnemySpeared")})
+
+        return im
+
+class EnemyHard(Enemy):
+    def __init__(self,game,cx,cy,currentMap):
+        lives = 5
+        speed = 2.5
+        enemyLevel = "hard"
+        hitGapTime = 100
+        super().__init__(game,lives,speed,enemyLevel,cx,cy,self.loadImage(),hitGapTime,currentMap)
+
+    def loadImage(self):
+        im = {}
+        im.update({"hardEnemyIdle": self.pLoad("hardEnemyIdle")})
+
+        im.update({"hardEnemyAttack1": self.pLoad("hardEnemyAttack1")})
+        im.update({"hardEnemyAttack2": self.pLoad("hardEnemyAttack2")})
+        im.update({"hardEnemyAttack3": self.pLoad("hardEnemyAttack3")})
+        im.update({"hardEnemyAttack4": self.pLoad("hardEnemyAttack4")})
+        im.update({"hardEnemyAttack5": self.pLoad("hardEnemyAttack5")})
+        im.update({"hardEnemyAttack6": self.pLoad("hardEnemyAttack6")})
+        im.update({"hardEnemyAttack7": self.pLoad("hardEnemyAttack7")})
+        im.update({"hardEnemyAttack8": self.pLoad("hardEnemyAttack8")})
+
+        im.update({"hardEnemyDefend": self.pLoad("hardEnemyDefend")})
+
+        im.update({"hardEnemyHit1": self.pLoad("hardEnemyHit1")})
+        im.update({"hardEnemyHit2": self.pLoad("hardEnemyHit2")})
+        im.update({"hardEnemyHit3": self.pLoad("hardEnemyHit3")})
+        im.update({"hardEnemyHit4": self.pLoad("hardEnemyHit4")})
+
+        im.update({"hardEnemyGetHit": self.pLoad("hardEnemyGetHit")})
+
+        im.update({"hardEnemyDying1": self.pLoad("hardEnemyDying1")})
+        im.update({"hardEnemyDying2": self.pLoad("hardEnemyDying2")})
+        im.update({"hardEnemyDying3": self.pLoad("hardEnemyDying3")})
+        im.update({"hardEnemyDying4": self.pLoad("hardEnemyDying4")})
+        im.update({"hardEnemyDying5": self.pLoad("hardEnemyDying5")})
+        im.update({"hardEnemyDying6": self.pLoad("hardEnemyDying6")})
+        im.update({"hardEnemyDying7": self.pLoad("hardEnemyDying7")})
+
+        im.update({"hardEnemySpeared": self.pLoad("hardEnemySpeared")})
+
+        return im

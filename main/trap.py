@@ -38,6 +38,7 @@ class Blades(pygame.sprite.Sprite,Trap):
         self.hitCounter = 1
         self.gapTime = 150
         self.gapTimeCounter = self.gapTime +1
+        self.soundFlag = False
 
     def loadImage(self):
         im = {}
@@ -50,18 +51,26 @@ class Blades(pygame.sprite.Sprite,Trap):
 
     def pulling(self):
         self.hitCounter += 0.1
+        if not self.soundFlag:
+            self.game.sounds.playSound("trapDeploy")
+            self.soundFlag = True
         if self.hitCounter > 5:
             self.hitCounter = 4
             self.hitMode = True
+            self.soundFlag = False
             self.gapTimeCounter = 0
         self.image = self.images[f"blade{int(self.hitCounter)}"]
         self.rect = self.image.get_rect(bottomleft=(self.currentLeft,self.currentBottom))
 
     def hiding(self):
         self.hitCounter -= 0.1
+        if not self.soundFlag:
+            self.game.sounds.playSound("trapHide")
+            self.soundFlag = True
         if self.hitCounter < 1:
             self.hitCounter = 1
             self.hitMode = False
+            self.soundFlag = False
             self.gapTimeCounter = 0
         self.image = self.images[f"blade{int(self.hitCounter)}"]
         self.rect = self.image.get_rect(bottomleft=(self.currentLeft, self.currentBottom))
@@ -82,8 +91,10 @@ class Blades(pygame.sprite.Sprite,Trap):
                 if enemy.rect.colliderect(self.rect) and self.hitMode:
                     if enemy.direction == "right":
                         enemy.bladeX = self.rect.left
+                        self.soundFlag = True
                     elif enemy.direction == "left":
                         enemy.bladeX = self.rect.right
+                        self.soundFlag = True
                     enemy.speared()
                     self.gapTimeCounter = -15
                     self.hitMode = False

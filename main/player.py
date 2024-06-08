@@ -27,6 +27,9 @@ class Player(pygame.sprite.Sprite):
 
         self.climbCounter = 1
         self.climb = False
+        self.climb4blockFlag = False
+        self.amountblocksWall = 0
+        self.climbSoundFlag = False
 
 
         self.crouch = False
@@ -41,10 +44,12 @@ class Player(pygame.sprite.Sprite):
         self.hidedSword = False
         self.pickUpSwordCollisionRight = False
         self.pickUpSwordCollisionLeft = False
+        self.pickUpSwordSoundFlag = False
 
         self.hit = False
         self.hitCounter =1
         self.hitGapCounter = 101
+        self.hitSoundFlag = False
 
         self.defend = False
 
@@ -56,6 +61,13 @@ class Player(pygame.sprite.Sprite):
         self.deadCounter = 1
         self.isSpeared = False
         self.bladeX = None
+        self.spearedSoundFlag = False
+
+        self.getPotionMode = False
+        self.getPotionCounter = 1
+        self.getPotionSoundFlag = False
+
+
 
 
     def pLoad(self,fileName):
@@ -150,6 +162,23 @@ class Player(pygame.sprite.Sprite):
 
         im.update({"speared": self.pLoad("speared")})
 
+        im.update({"getPotion1":self.pLoad("getPotion1")})
+        im.update({"getPotion2": self.pLoad("getPotion2")})
+        im.update({"getPotion3": self.pLoad("getPotion3")})
+        im.update({"getPotion4": self.pLoad("getPotion4")})
+        im.update({"getPotion5": self.pLoad("getPotion6")})
+        im.update({"getPotion6": self.pLoad("getPotion5")})
+        im.update({"getPotion7": self.pLoad("getPotion6")})
+        im.update({"getPotion8": self.pLoad("getPotion7")})
+        im.update({"getPotion9": self.pLoad("getPotion8")})
+        im.update({"getPotion10": self.pLoad("getPotion9")})
+        im.update({"getPotion11": self.pLoad("getPotion10")})
+        im.update({"getPotion12": self.pLoad("getPotion11")})
+        im.update({"getPotion13": self.pLoad("getPotion12")})
+        im.update({"getPotion14": self.pLoad("getPotion13")})
+
+
+
 
         return im
 
@@ -181,26 +210,38 @@ class Player(pygame.sprite.Sprite):
 
         for tile in self.game.tileHandler.tileMap:
             # I czy nie ma blokow nad soba
-            if tile.rect.colliderect((self.rect.x,self.rect.y - self.game.PIXEL_SIZE,self.rect.width,self.rect.height)):
+            if tile.rect.colliderect((self.rect.x,self.rect.top - self.game.PIXEL_SIZE,self.rect.width,self.rect.height)):
                 return False
             #II czy obok siebie ma dwa bloki
             if self.direction == "right":
-                if tile.rect.colliderect((self.rect.x+self.game.PIXEL_SIZE,self.rect.y - self.game.PIXEL_SIZE,self.rect.width,self.rect.height)):
-                    pass
-                if tile.rect.colliderect((self.rect.x + self.game.PIXEL_SIZE, self.rect.y - self.game.PIXEL_SIZE*2, self.rect.width,self.rect.height)):
-                    check2 = True
-                    check1 = True
+                if tile.rect.colliderect((self.rect.x + self.game.PIXEL_SIZE, self.rect.y - (self.game.PIXEL_SIZE*2),
+                                          self.rect.width, self.rect.height)):
+                    check2 = check1 = True
                     leftWall = tile.rect.left
                     bottomWall = tile.rect.bottom
-                if tile.rect.colliderect((self.rect.x + self.game.PIXEL_SIZE, self.rect.y - (self.game.PIXEL_SIZE*4), self.rect.width,self.rect.height)):
-                    check3 = False
+                    if not self.climb4blockFlag:
+                        self.amountblocksWall = 3
+                    if tile.rect.colliderect(self.rect.x + self.game.PIXEL_SIZE, self.rect.y - (self.game.PIXEL_SIZE * 3),self.rect.width, self.rect.height):
+                        self.climb4blockFlag = True
+                        self.amountblocksWall = 4
+                    if tile.rect.colliderect(
+                            (self.rect.x + self.game.PIXEL_SIZE, self.rect.y - (self.game.PIXEL_SIZE * 4),
+                             self.rect.width, self.rect.height)):
+                        check3 = False
+
             elif self.direction == "left":
-                if tile.rect.colliderect((self.rect.x - self.game.PIXEL_SIZE, self.rect.y - self.game.PIXEL_SIZE*2,
+                if tile.rect.colliderect((self.rect.x - self.game.PIXEL_SIZE, self.rect.y - (self.game.PIXEL_SIZE*2),
                                           self.rect.width, self.rect.height)):
-                    check2 = True
-                    check1 = True
+                    check2 = check1 = True
                     rightWall = tile.rect.right
                     bottomWall = tile.rect.bottom
+                    if not self.climb4blockFlag:
+                        self.amountblocksWall = 3
+                    if tile.rect.colliderect(
+                            (self.rect.x - self.game.PIXEL_SIZE, self.rect.y - (self.game.PIXEL_SIZE * 3),
+                             self.rect.width, self.rect.height)):
+                        self.climb4blockFlag = True
+                        self.amountblocksWall = 4
                 if tile.rect.colliderect((self.rect.x - self.game.PIXEL_SIZE, self.rect.y - (self.game.PIXEL_SIZE * 4),
                                           self.rect.width, self.rect.height)):
                     check3 = False
@@ -209,26 +250,61 @@ class Player(pygame.sprite.Sprite):
             self.climb = True
             self.vel_y = 0
             # jesli jest mozliwosc do wspinaczki -> wspinamy sie
+            if self.amountblocksWall == 3 and not self.climb4blockFlag:
+                self.climbCounter += 0.1
+                if 10 < int(self.climbCounter) < 16:
+                    if not self.climbSoundFlag:
+                        self.climbSoundFlag = True
+                        self.game.sounds.playSound("climb")
+                    self.vel_y -= 0.5
+                if int(self.climbCounter) >= 16:
+                    self.vel_y -= 0.8
 
-            self.climbCounter += 0.1
-            if 10 < int(self.climbCounter) < 18:
-                self.vel_y -=1
+                if self.direction == "right":
+                    if int(self.climbCounter) > 18:
+                        self.rect = self.image.get_rect(bottom=bottomWall - self.game.PIXEL_SIZE,
+                                                        right=self.rect.right + self.game.PIXEL_SIZE)
+                        self.climb = False
+                        self.climbSoundFlag = False
+                    else:
+                        self.image = pygame.transform.flip(self.images[f"climb{int(self.climbCounter)}"], True, False)
+                        self.rect = self.image.get_rect(right=leftWall, top=self.rect.top, bottom=self.rect.bottom)
 
-            if self.direction == "right":
-                if int(self.climbCounter) >18:
-                    self.rect = self.image.get_rect(bottom=bottomWall-self.game.PIXEL_SIZE,right=self.rect.right+self.game.PIXEL_SIZE)
-                    self.climb = False
-                else:
-                    self.image = pygame.transform.flip(self.images[f"climb{int(self.climbCounter)}"],True,False)
-                    self.rect = self.image.get_rect(right=leftWall,top=self.rect.top,bottom=self.rect.bottom)
+                elif self.direction == "left":
+                    if int(self.climbCounter) > 18:
+                        self.rect = self.image.get_rect(bottom=bottomWall + self.game.PIXEL_SIZE,
+                                                        right=self.rect.right - self.game.PIXEL_SIZE)
+                        self.climb = False
+                        self.climbSoundFlag = False
+                    else:
+                        self.image = self.images[f"climb{int(self.climbCounter)}"]
+                        self.rect = self.image.get_rect(left=rightWall, top=self.rect.top, bottom=self.rect.bottom)
+            if self.amountblocksWall == 4:
+                self.climbCounter += 0.1
+                if 10 < int(self.climbCounter) < 18:
+                    if not self.climbSoundFlag:
+                        self.climbSoundFlag = True
+                        self.game.sounds.playSound("climb")
+                    self.vel_y -=1
+                if self.direction == "right":
+                    if int(self.climbCounter) >18:
+                        self.rect = self.image.get_rect(bottom=bottomWall-self.game.PIXEL_SIZE,right=self.rect.right+self.game.PIXEL_SIZE)
+                        self.climb = False
+                        self.climbSoundFlag = False
+                        self.climb4blockFlag = False
+                    else:
+                        self.image = pygame.transform.flip(self.images[f"climb{int(self.climbCounter)}"],True,False)
+                        self.rect = self.image.get_rect(right=leftWall,top=self.rect.top,bottom=self.rect.bottom)
 
-            elif self.direction == "left":
-                if int(self.climbCounter) >18:
-                    self.rect = self.image.get_rect(bottom=bottomWall+self.game.PIXEL_SIZE,right=self.rect.right-self.game.PIXEL_SIZE)
-                    self.climb = False
-                else:
-                    self.image =self.images[f"climb{int(self.climbCounter)}"]
-                    self.rect = self.image.get_rect(left=rightWall,top=self.rect.top,bottom=self.rect.bottom)
+                elif self.direction == "left":
+                    if int(self.climbCounter) >18:
+                        self.rect = self.image.get_rect(bottom=bottomWall+self.game.PIXEL_SIZE,right=self.rect.right-self.game.PIXEL_SIZE)
+                        self.climb = False
+                        self.climbSoundFlag = False
+                        self.climb4blockFlag = False
+                    else:
+                        self.image =self.images[f"climb{int(self.climbCounter)}"]
+                        self.rect = self.image.get_rect(left=rightWall,top=self.rect.top,bottom=self.rect.bottom)
 
 
     def walking(self):
@@ -384,11 +460,21 @@ class Player(pygame.sprite.Sprite):
                 self.hitCounter = 1
                 self.attackCounter = 10
                 self.hit = False
+                self.hitSoundFlag = False
                 if self.checkDistance() < 50 and self.nearestEnemy.defendMode == False:
-                    print("enemy was hit!")
                     self.nearestEnemy.enemyLives -= 1
                     self.nearestEnemy.getHitCounter = 20
-
+                    if not self.hitSoundFlag:
+                        self.game.sounds.playSound("enemyGetDamage")
+                        self.hitSoundFlag = True
+            if self.checkDistance() < 50 and self.nearestEnemy.defendMode and self.hitCounter >1:
+                if not self.hitSoundFlag:
+                    self.game.sounds.playSound("swordHit")
+                    self.hitSoundFlag = True
+            elif self.checkDistance() > 50 and self.hitCounter >1:
+                if not self.hitSoundFlag:
+                    self.game.sounds.playSound("swordSwing")
+                    self.hitSoundFlag = True
             if self.direction == "right":
                 self.image = pygame.transform.flip(self.images[f"attack{int(self.hitCounter)}"], True, False)
                 self.rect = self.image.get_rect(topleft=(self.current_left, self.current_top))
@@ -400,7 +486,11 @@ class Player(pygame.sprite.Sprite):
             if self.attack and not self.walk:
                 if self.attackCounter > 10:
                     self.attackCounter = 10
+                    self.pickUpSwordSoundFlag = False
                 if self.direction == "right" and not self.pickUpSwordCollisionRight:
+                    if not self.pickUpSwordSoundFlag and self.attackCounter < 10:
+                        self.game.sounds.playSound("playerPickUpSword")
+                        self.pickUpSwordSoundFlag = True
                     self.attackCounter += 0.2
                     self.image = pygame.transform.flip(self.images[f"pickUpSword{int(self.attackCounter)}"],True,False)
                     if self.collisionLeft:
@@ -409,6 +499,9 @@ class Player(pygame.sprite.Sprite):
                     else:
                         self.rect = self.image.get_rect(topleft=(self.current_left,self.current_top))
                 elif self.direction == "left" and not self.pickUpSwordCollisionLeft:
+                    if not self.pickUpSwordSoundFlag and self.attackCounter < 10:
+                        self.game.sounds.playSound("playerPickUpSword")
+                        self.pickUpSwordSoundFlag = True
                     self.attackCounter += 0.2
                     self.image = self.images[f"pickUpSword{int(self.attackCounter)}"]
                     if self.collisionRight:
@@ -419,10 +512,13 @@ class Player(pygame.sprite.Sprite):
             elif not self.attack:
                 if self.attackCounter >1:
                     self.attackCounter -= 0.2
+                    if not self.pickUpSwordSoundFlag:
+                        self.game.sounds.playSound("playerHideSword")
+                        self.pickUpSwordSoundFlag = True
                     if self.attackCounter <1:
                         self.attackCounter = 1
                         self.hidedSword = True
-
+                        self.pickUpSwordSoundFlag = False
                     if self.direction == "left":
                         self.image = self.images[f"pickUpSword{int(self.attackCounter)}"]
                         self.rect = self.image.get_rect(topright=(self.current_right, self.current_top))
@@ -440,8 +536,30 @@ class Player(pygame.sprite.Sprite):
             self.image = self.images["getHit"]
             self.rect = self.image.get_rect(topleft=(self.current_left,self.current_top))
 
+    def getPotion(self):
+        if self.getPotionMode:
+            self.getPotionCounter += 0.1
+            if not self.getPotionSoundFlag:
+                self.game.sounds.playSound("drinking")
+                self.getPotionSoundFlag = True
+            if self.getPotionCounter > 15:
+                self.game.sounds.stopSound("drinking")
+                self.game.sounds.playSound("healing")
+                self.getPotionCounter = 1
+                self.getPotionMode = False
+                self.getPotionSoundFlag = False
+                self.game.ui.playerLifes = self.game.ui.playerLifes + 1 if self.game.ui.playerLifes < self.game.ui.playerMaxLifes else self.game.ui.playerMaxLifes
+            if self.direction == "right":
+                self.image = pygame.transform.flip(self.images[f"getPotion{int(self.getPotionCounter)}"],True,False)
+                self.rect = self.image.get_rect(bottomleft=(self.current_left,self.current_bottom))
+            elif self.direction == "left":
+                self.image = self.images[f"getPotion{int(self.getPotionCounter)}"]
+                self.rect = self.image.get_rect(bottomright=(self.current_right,self.current_bottom))
     def speared(self):
         self.isDead = self.isSpeared =True
+        if not self.spearedSoundFlag:
+            self.spearedSoundFlag = True
+            self.game.sounds.playSound("stabbed")
         if self.direction == "right":
             self.image = pygame.transform.flip(self.images["speared"], True, False)
             self.rect = self.image.get_rect(bottomleft=(self.bladeX,self.current_bottom))
@@ -454,6 +572,7 @@ class Player(pygame.sprite.Sprite):
         self.isDead = True
         self.deadCounter += 0.1
         if self.deadCounter >7:
+
             self.deadCounter = 6
             self.game.gameOver = True
 
@@ -507,7 +626,7 @@ class Player(pygame.sprite.Sprite):
 
 
                 #jesli postac przestanie isc
-                if not self.walk and not self.climb and not self.attack:
+                if not self.walk and not self.climb and not self.attack and not self.getPotionMode:
                     self.standing()
 
                 #wspinanie sie
@@ -532,8 +651,20 @@ class Player(pygame.sprite.Sprite):
 
                 self.crouchUPColision = self.crouchCollisionLeft = self.crouchCollisionRight = False
 
+                # podnoszenie eliksiru
+                for potion in self.game.level.potions:
+                    if self.direction == "right":
+                        if potion.rect.colliderect((self.rect.x + self.game.PIXEL_SIZE, self.rect.y, self.rect.width, self.rect.height)) and keys[pygame.K_SPACE] and not self.attack:
+                            self.getPotionMode = True
+                            potion.kill()
+
+                    elif self.direction == "left":
+                        if potion.rect.colliderect((self.rect.x - self.game.PIXEL_SIZE, self.rect.y, self.rect.width, self.rect.height)) and keys[pygame.K_SPACE] and not self.attack:
+                            self.getPotionMode = True
+                            potion.kill()
+
                 #skok
-                if keys[pygame.K_SPACE] and not self.jump and self.jumpCounter > 35 and not self.climb and not self.crouch and not self.attack:
+                if keys[pygame.K_SPACE] and not self.jump and self.jumpCounter > 35 and not self.climb and not self.crouch and not self.attack and not self.getPotionMode:
                     self.vel_y = -self.SPEED * 2.5
                     self.jumpCounter = 0
                     self.jump = True
@@ -553,6 +684,7 @@ class Player(pygame.sprite.Sprite):
                     self.hit = True
                     self.hitGapCounter = 0
 
+                self.getPotion()
                 self.attacking()
         #wykrywanie kolizji z przedmiotami
         for tile in self.game.tileHandler.tileMap:
@@ -605,6 +737,8 @@ class Player(pygame.sprite.Sprite):
                 elif self.vel_x < 0:
                     self.rect.left = enemy.rect.right
                     self.vel_x = 0
+
+
 
         #ruch
         self.rect.x += self.vel_x
