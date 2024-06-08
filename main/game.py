@@ -20,7 +20,7 @@ class Game:
         self.gameOver = False
 
         #inicjalizacja obiektow
-        self.player = Player(self,1*48,14*48)
+        self.player = Player(self,18*48,14*48)
 
         #self.level = Level1(self,10)
         self.level = WorkingLevel(self,11)
@@ -38,9 +38,11 @@ class Game:
         # rysujemy mape
         self.tileHandler.draw(self.window)
 
+        # rysujemy drzwi
+        self.level.door.draw(self.window)
+
         #rysujemy gracza
         self.player.draw(self.window)
-
 
 
         # rysujemy rzeczy na levelu

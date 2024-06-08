@@ -18,8 +18,10 @@ class Sound():
         self.sounds.update({"climb": self.load_sounds("climb.wav", 1)}) # tez do sprawdzenia
         self.sounds.update({"healing": self.load_sounds("healing.wav", 1)})
         self.sounds.update({"drinking": self.load_sounds("drinking.mp3", 1)})
-        self.sounds.update({"trapDeploy": self.load_sounds("trapDeploy.mp3", 1)})
-        self.sounds.update({"trapHide": self.load_sounds("trapHide.mp3", 1)})
+        self.sounds.update({"trapDeploy": self.load_sounds("trapDeploy.mp3", 0.5)})
+        self.sounds.update({"trapHide": self.load_sounds("trapHide.mp3", 0.5)})
+        self.sounds.update({"stabbed": self.load_sounds("stabbed.wav", 0.5)})
+        self.sounds.update({"openDoor": self.load_sounds("opendoor.mp3", 0.5)})
 
         pygame.mixer.init()
         pygame.mixer.set_num_channels(8)

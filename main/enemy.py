@@ -42,6 +42,7 @@ class Enemy(pygame.sprite.Sprite,abc.ABC):
 
         self.isSpeared = False
         self.bladeX = None
+        self.spearedSoundFlag = False
 
 
 
@@ -95,6 +96,7 @@ class Enemy(pygame.sprite.Sprite,abc.ABC):
                     else:
                         self.rect = self.image.get_rect(topleft=(self.currentLeft, self.currentTop))
             else:
+                print(self.collisionRight)
                 if self.direction == "right" and not self.collisionLeft:
                     self.attackCounter += 0.1
                     if self.attackCounter > 5:
@@ -198,6 +200,9 @@ class Enemy(pygame.sprite.Sprite,abc.ABC):
 
     def speared(self):
         self.isDead = self.isSpeared = True
+        if not self.spearedSoundFlag:
+            self.spearedSoundFlag = True
+            self.game.sounds.playSound("stabbed")
         self.enemyLives = 0
         if self.direction == "right":
             self.image = self.images[f"{self.enemyLevel}EnemySpeared"]

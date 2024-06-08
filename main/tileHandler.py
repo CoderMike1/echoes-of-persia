@@ -23,7 +23,18 @@ class healPotion(Tile):
 
         self.image = pygame.transform.scale(self.image,(self.image.get_width() * 3, self.image.get_height() * 3))
         self.currentLevel = currentLevel
+class Door(Tile):
+    def __init__(self,c_x,c_y,currentLevel):
+        super().__init__("closedDoor.png", c_x, c_y, c_x / 48, c_y / 48, "Door")
 
+        self.image = pygame.transform.scale(self.image, (self.image.get_width() * 2.5, self.image.get_height() * 2.5))
+        self.currentLevel = currentLevel
+
+
+    def openDoor(self,game):
+        game.sounds.playSound("openDoor")
+        self.image = pygame.image.load(os.path.join(self.pathTiles,"openDoor.png")).convert_alpha()
+        self.image = pygame.transform.scale(self.image, (self.image.get_width() * 2.5, self.image.get_height() * 2.5))
 
 class TileHandler(pygame.sprite.Sprite):
     pathMaps = os.path.join(os.path.dirname(os.getcwd()), 'images/maps')

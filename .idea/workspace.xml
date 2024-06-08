@@ -11,6 +11,8 @@
       <change beforePath="$PROJECT_DIR$/main/game.py" beforeDir="false" afterPath="$PROJECT_DIR$/main/game.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/main/level.py" beforeDir="false" afterPath="$PROJECT_DIR$/main/level.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/main/player.py" beforeDir="false" afterPath="$PROJECT_DIR$/main/player.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/main/sound.py" beforeDir="false" afterPath="$PROJECT_DIR$/main/sound.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/main/tileHandler.py" beforeDir="false" afterPath="$PROJECT_DIR$/main/tileHandler.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/main/trap.py" beforeDir="false" afterPath="$PROJECT_DIR$/main/trap.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />

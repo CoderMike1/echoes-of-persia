@@ -61,10 +61,12 @@ class Player(pygame.sprite.Sprite):
         self.deadCounter = 1
         self.isSpeared = False
         self.bladeX = None
+        self.spearedSoundFlag = False
 
         self.getPotionMode = False
         self.getPotionCounter = 1
         self.getPotionSoundFlag = False
+
 
 
 
@@ -555,6 +557,9 @@ class Player(pygame.sprite.Sprite):
                 self.rect = self.image.get_rect(bottomright=(self.current_right,self.current_bottom))
     def speared(self):
         self.isDead = self.isSpeared =True
+        if not self.spearedSoundFlag:
+            self.spearedSoundFlag = True
+            self.game.sounds.playSound("stabbed")
         if self.direction == "right":
             self.image = pygame.transform.flip(self.images["speared"], True, False)
             self.rect = self.image.get_rect(bottomleft=(self.bladeX,self.current_bottom))
@@ -567,6 +572,7 @@ class Player(pygame.sprite.Sprite):
         self.isDead = True
         self.deadCounter += 0.1
         if self.deadCounter >7:
+
             self.deadCounter = 6
             self.game.gameOver = True
 
