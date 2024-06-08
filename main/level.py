@@ -2,7 +2,7 @@
 import pygame,abc
 from enemy import EnemyEasy,EnemyMedium,EnemyHard
 from trap import Blades
-from tileHandler import healPotion,Door
+from tileHandler import healPotion,Door,Key
 class Level(abc.ABC):
     def __init__(self,game,currentMap):
         self.game = game
@@ -68,8 +68,11 @@ class WorkingLevel(Level):
         #self.traps.add(Blades(game,700,640,11))
 
 
-        #self.potions.add(healPotion(12*48,672-44,11))
-        self.door = Door(500,525,11)
+        self.potions.add(healPotion(12*48,672-44,11))
+        self.door = Door(500,525,11,game)
+
+
+        self.key = Key(300,645,11,game)
 
 
 
@@ -85,6 +88,7 @@ class WorkingLevel(Level):
             trap.update()
 
         self.door.update()
+        self.key.update()
 
     def draw(self,surface):
         for enemy in self.enemies:
@@ -95,3 +99,5 @@ class WorkingLevel(Level):
 
         for potion in self.potions:
             potion.draw(surface)
+
+        self.key.draw(surface)

@@ -67,6 +67,7 @@ class Player(pygame.sprite.Sprite):
         self.getPotionCounter = 1
         self.getPotionSoundFlag = False
 
+        self.getKey = False
 
 
 
@@ -509,6 +510,12 @@ class Player(pygame.sprite.Sprite):
                         self.collisionRight = False
                     else:
                         self.rect = self.image.get_rect(topright=(self.current_right, self.current_top))
+                elif self.pickUpSwordCollisionLeft:
+                    self.attack = False
+                    self.rect = self.image.get_rect(topright=(self.current_right, self.current_top))
+                elif self.pickUpSwordCollisionRight:
+                    self.attack = False
+                    self.rect = self.image.get_rect(topleft=(self.current_left, self.current_top))
             elif not self.attack:
                 if self.attackCounter >1:
                     self.attackCounter -= 0.2
@@ -654,15 +661,25 @@ class Player(pygame.sprite.Sprite):
                 # podnoszenie eliksiru
                 for potion in self.game.level.potions:
                     if self.direction == "right":
-                        if potion.rect.colliderect((self.rect.x + self.game.PIXEL_SIZE, self.rect.y, self.rect.width, self.rect.height)) and keys[pygame.K_SPACE] and not self.attack:
+                        if potion.rect.colliderect((self.rect.x + self.game.PIXEL_SIZE, self.rect.y, self.rect.width, self.rect.height)) and keys[pygame.K_UP] and not self.attack:
                             self.getPotionMode = True
                             potion.kill()
 
                     elif self.direction == "left":
-                        if potion.rect.colliderect((self.rect.x - self.game.PIXEL_SIZE, self.rect.y, self.rect.width, self.rect.height)) and keys[pygame.K_SPACE] and not self.attack:
+                        if potion.rect.colliderect((self.rect.x - self.game.PIXEL_SIZE, self.rect.y, self.rect.width, self.rect.height)) and keys[pygame.K_UP] and not self.attack:
                             self.getPotionMode = True
                             potion.kill()
+                if keys[pygame.K_UP] and self.game.level.door.openable and not self.game.level.door.open and self.getKey:
+                    self.getKey = False
+                    self.game.level.door.open = True
+                    self.game.sounds.playSound("openDoor")
 
+
+                #podnoszenie klucza
+                if keys[pygame.K_UP] and self.game.level.key.pickable and not self.getKey:
+                    self.getKey = True
+                    self.game.sounds.playSound("getKey")
+                    self.game.level.key.rect.x = -150
                 #skok
                 if keys[pygame.K_SPACE] and not self.jump and self.jumpCounter > 35 and not self.climb and not self.crouch and not self.attack and not self.getPotionMode:
                     self.vel_y = -self.SPEED * 2.5
@@ -684,6 +701,7 @@ class Player(pygame.sprite.Sprite):
                     self.hit = True
                     self.hitGapCounter = 0
 
+
                 self.getPotion()
                 self.attacking()
         #wykrywanie kolizji z przedmiotami
@@ -696,7 +714,7 @@ class Player(pygame.sprite.Sprite):
                     self.crouchCollisionRight = True
                 if tile.rect.colliderect((self.rect.left-24,self.rect.y-1,self.rect.width,self.rect.height)) and self.crouchCounter <2:
                     self.crouchCollisionLeft = True
-            if tile.rect.colliderect((self.rect.left-25,self.rect.y-3,self.rect.width,self.rect.height)):
+            if tile.rect.colliderect((self.rect.left-29,self.rect.y-3,self.rect.width,self.rect.height)):
                 self.pickUpSwordCollisionLeft = True
             if tile.rect.colliderect((self.rect.right+11,self.rect.y-3,self.rect.width,self.rect.height)):
                 self.pickUpSwordCollisionRight = True
