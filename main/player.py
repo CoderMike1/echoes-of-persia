@@ -29,6 +29,7 @@ class Player(pygame.sprite.Sprite):
         self.climb = False
         self.climb4blockFlag = False
         self.amountblocksWall = 0
+        self.climbSoundFlag = False
 
 
         self.crouch = False
@@ -43,10 +44,12 @@ class Player(pygame.sprite.Sprite):
         self.hidedSword = False
         self.pickUpSwordCollisionRight = False
         self.pickUpSwordCollisionLeft = False
+        self.pickUpSwordSoundFlag = False
 
         self.hit = False
         self.hitCounter =1
         self.hitGapCounter = 101
+        self.hitSoundFlag = False
 
         self.defend = False
 
@@ -61,6 +64,7 @@ class Player(pygame.sprite.Sprite):
 
         self.getPotionMode = False
         self.getPotionCounter = 1
+        self.getPotionSoundFlag = False
 
 
 
@@ -247,6 +251,9 @@ class Player(pygame.sprite.Sprite):
             if self.amountblocksWall == 3 and not self.climb4blockFlag:
                 self.climbCounter += 0.1
                 if 10 < int(self.climbCounter) < 16:
+                    if not self.climbSoundFlag:
+                        self.climbSoundFlag = True
+                        self.game.sounds.playSound("climb")
                     self.vel_y -= 0.5
                 if int(self.climbCounter) >= 16:
                     self.vel_y -= 0.8
@@ -256,6 +263,7 @@ class Player(pygame.sprite.Sprite):
                         self.rect = self.image.get_rect(bottom=bottomWall - self.game.PIXEL_SIZE,
                                                         right=self.rect.right + self.game.PIXEL_SIZE)
                         self.climb = False
+                        self.climbSoundFlag = False
                     else:
                         self.image = pygame.transform.flip(self.images[f"climb{int(self.climbCounter)}"], True, False)
                         self.rect = self.image.get_rect(right=leftWall, top=self.rect.top, bottom=self.rect.bottom)
@@ -265,17 +273,22 @@ class Player(pygame.sprite.Sprite):
                         self.rect = self.image.get_rect(bottom=bottomWall + self.game.PIXEL_SIZE,
                                                         right=self.rect.right - self.game.PIXEL_SIZE)
                         self.climb = False
+                        self.climbSoundFlag = False
                     else:
                         self.image = self.images[f"climb{int(self.climbCounter)}"]
                         self.rect = self.image.get_rect(left=rightWall, top=self.rect.top, bottom=self.rect.bottom)
             if self.amountblocksWall == 4:
                 self.climbCounter += 0.1
                 if 10 < int(self.climbCounter) < 18:
+                    if not self.climbSoundFlag:
+                        self.climbSoundFlag = True
+                        self.game.sounds.playSound("climb")
                     self.vel_y -=1
                 if self.direction == "right":
                     if int(self.climbCounter) >18:
                         self.rect = self.image.get_rect(bottom=bottomWall-self.game.PIXEL_SIZE,right=self.rect.right+self.game.PIXEL_SIZE)
                         self.climb = False
+                        self.climbSoundFlag = False
                         self.climb4blockFlag = False
                     else:
                         self.image = pygame.transform.flip(self.images[f"climb{int(self.climbCounter)}"],True,False)
@@ -285,6 +298,7 @@ class Player(pygame.sprite.Sprite):
                     if int(self.climbCounter) >18:
                         self.rect = self.image.get_rect(bottom=bottomWall+self.game.PIXEL_SIZE,right=self.rect.right-self.game.PIXEL_SIZE)
                         self.climb = False
+                        self.climbSoundFlag = False
                         self.climb4blockFlag = False
                     else:
                         self.image =self.images[f"climb{int(self.climbCounter)}"]
@@ -444,11 +458,21 @@ class Player(pygame.sprite.Sprite):
                 self.hitCounter = 1
                 self.attackCounter = 10
                 self.hit = False
+                self.hitSoundFlag = False
                 if self.checkDistance() < 50 and self.nearestEnemy.defendMode == False:
-                    print("enemy was hit!")
                     self.nearestEnemy.enemyLives -= 1
                     self.nearestEnemy.getHitCounter = 20
-
+                    if not self.hitSoundFlag:
+                        self.game.sounds.playSound("enemyGetDamage")
+                        self.hitSoundFlag = True
+            if self.checkDistance() < 50 and self.nearestEnemy.defendMode and self.hitCounter >1:
+                if not self.hitSoundFlag:
+                    self.game.sounds.playSound("swordHit")
+                    self.hitSoundFlag = True
+            elif self.checkDistance() > 50 and self.hitCounter >1:
+                if not self.hitSoundFlag:
+                    self.game.sounds.playSound("swordSwing")
+                    self.hitSoundFlag = True
             if self.direction == "right":
                 self.image = pygame.transform.flip(self.images[f"attack{int(self.hitCounter)}"], True, False)
                 self.rect = self.image.get_rect(topleft=(self.current_left, self.current_top))
@@ -460,7 +484,11 @@ class Player(pygame.sprite.Sprite):
             if self.attack and not self.walk:
                 if self.attackCounter > 10:
                     self.attackCounter = 10
+                    self.pickUpSwordSoundFlag = False
                 if self.direction == "right" and not self.pickUpSwordCollisionRight:
+                    if not self.pickUpSwordSoundFlag and self.attackCounter < 10:
+                        self.game.sounds.playSound("playerPickUpSword")
+                        self.pickUpSwordSoundFlag = True
                     self.attackCounter += 0.2
                     self.image = pygame.transform.flip(self.images[f"pickUpSword{int(self.attackCounter)}"],True,False)
                     if self.collisionLeft:
@@ -469,6 +497,9 @@ class Player(pygame.sprite.Sprite):
                     else:
                         self.rect = self.image.get_rect(topleft=(self.current_left,self.current_top))
                 elif self.direction == "left" and not self.pickUpSwordCollisionLeft:
+                    if not self.pickUpSwordSoundFlag and self.attackCounter < 10:
+                        self.game.sounds.playSound("playerPickUpSword")
+                        self.pickUpSwordSoundFlag = True
                     self.attackCounter += 0.2
                     self.image = self.images[f"pickUpSword{int(self.attackCounter)}"]
                     if self.collisionRight:
@@ -479,10 +510,13 @@ class Player(pygame.sprite.Sprite):
             elif not self.attack:
                 if self.attackCounter >1:
                     self.attackCounter -= 0.2
+                    if not self.pickUpSwordSoundFlag:
+                        self.game.sounds.playSound("playerHideSword")
+                        self.pickUpSwordSoundFlag = True
                     if self.attackCounter <1:
                         self.attackCounter = 1
                         self.hidedSword = True
-
+                        self.pickUpSwordSoundFlag = False
                     if self.direction == "left":
                         self.image = self.images[f"pickUpSword{int(self.attackCounter)}"]
                         self.rect = self.image.get_rect(topright=(self.current_right, self.current_top))
@@ -503,9 +537,15 @@ class Player(pygame.sprite.Sprite):
     def getPotion(self):
         if self.getPotionMode:
             self.getPotionCounter += 0.1
+            if not self.getPotionSoundFlag:
+                self.game.sounds.playSound("drinking")
+                self.getPotionSoundFlag = True
             if self.getPotionCounter > 15:
+                self.game.sounds.stopSound("drinking")
+                self.game.sounds.playSound("healing")
                 self.getPotionCounter = 1
                 self.getPotionMode = False
+                self.getPotionSoundFlag = False
                 self.game.ui.playerLifes = self.game.ui.playerLifes + 1 if self.game.ui.playerLifes < self.game.ui.playerMaxLifes else self.game.ui.playerMaxLifes
             if self.direction == "right":
                 self.image = pygame.transform.flip(self.images[f"getPotion{int(self.getPotionCounter)}"],True,False)

@@ -64,10 +64,11 @@ class WorkingLevel(Level):
         super().__init__(game,currentMap)
 
 
-        self.enemies.add(EnemyHard(game,800,100,11))
-        #self.traps.add(Blades(game,300,640,11))
+        #self.enemies.add(EnemyEasy(game,200,100,11))
+        self.traps.add(Blades(game,700,640,11))
 
-        #self.potions.add(healPotion(12*48,672-44,11))
+
+        self.potions.add(healPotion(12*48,672-44,11))
 
 
     def getLevel(self):

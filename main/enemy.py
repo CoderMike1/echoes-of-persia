@@ -29,6 +29,7 @@ class Enemy(pygame.sprite.Sprite,abc.ABC):
         self.hitCounter = 1
         self.hitGap = hitGapTime
         self.hitGapCounter = hitGapTime+1
+        self.hitSoundFlag = False
 
         self.defendMode = False
         self.enemyDefendFlag = False
@@ -37,6 +38,7 @@ class Enemy(pygame.sprite.Sprite,abc.ABC):
 
         self.deadCounter = 1
         self.isDead = False
+        self.deadSoundFlag = False
 
         self.isSpeared = False
         self.bladeX = None
@@ -131,9 +133,17 @@ class Enemy(pygame.sprite.Sprite,abc.ABC):
             self.hitCounter = 1
             self.hitMode = False
             self.hitGapCounter = 0
+            self.hitSoundFlag = False
             if distance < 50 and not self.game.player.defend:
                 self.game.ui.playerLifes -=1
                 self.game.player.getHitCounter = 20
+                if not self.hitSoundFlag:
+                    self.game.sounds.playSound("playerGetDamage")
+                    self.hitSoundFlag = True
+        if distance <50 and self.game.player.defend and self.hitCounter>1:
+            if not self.hitSoundFlag:
+                self.game.sounds.playSound("swordHit")
+                self.hitSoundFlag = True
 
         if self.direction == "right":
             self.vel_x = self.enemySpeed
@@ -174,6 +184,9 @@ class Enemy(pygame.sprite.Sprite,abc.ABC):
         self.deadCounter += 0.1
         if self.deadCounter > 8:
             self.deadCounter = 7
+            if not self.deadSoundFlag:
+                self.game.sounds.playSound("enemyDead")
+                self.deadSoundFlag = True
 
         if self.direction == "right":
             self.image = self.images[f"{self.enemyLevel}EnemyDying{int(self.deadCounter)}"]
