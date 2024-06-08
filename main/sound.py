@@ -22,6 +22,7 @@ class Sound():
         self.sounds.update({"trapHide": self.load_sounds("trapHide.mp3", 0.5)})
         self.sounds.update({"stabbed": self.load_sounds("stabbed.wav", 0.5)})
         self.sounds.update({"openDoor": self.load_sounds("opendoor.mp3", 0.5)})
+        self.sounds.update({"getKey": self.load_sounds("collectKey.mp3", 0.5)})
 
         pygame.mixer.init()
         pygame.mixer.set_num_channels(8)

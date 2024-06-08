@@ -1,6 +1,6 @@
 import sys
 
-import pygame,os
+import pygame,os,math
 
 class Tile(pygame.sprite.Sprite):
     pathTiles = os.path.join(os.path.dirname(os.getcwd()), 'images','tiles')
@@ -24,17 +24,63 @@ class healPotion(Tile):
         self.image = pygame.transform.scale(self.image,(self.image.get_width() * 3, self.image.get_height() * 3))
         self.currentLevel = currentLevel
 class Door(Tile):
-    def __init__(self,c_x,c_y,currentLevel):
+    def __init__(self,c_x,c_y,currentLevel,game):
         super().__init__("closedDoor.png", c_x, c_y, c_x / 48, c_y / 48, "Door")
-
+        self.game = game
         self.image = pygame.transform.scale(self.image, (self.image.get_width() * 2.5, self.image.get_height() * 2.5))
         self.currentLevel = currentLevel
 
+        self.openable = False
+        self.open = False
 
-    def openDoor(self,game):
-        game.sounds.playSound("openDoor")
+
+    def update(self):
+        if self.game.player.direction == "right":
+            distance =  math.hypot(self.game.player.rect.right - self.rect.right,
+                              self.game.player.rect.top - self.rect.top)
+        elif self.game.player.direction == "left":
+            distance =  math.hypot(self.game.player.rect.left - self.rect.right,
+                              self.game.player.rect.top - self.rect.top)
+
+
+        if distance <50:
+            self.openable = True
+        else:
+            self.openable = False
+
+        if self.open:
+            self.openDoor()
+
+
+    def openDoor(self):
+
         self.image = pygame.image.load(os.path.join(self.pathTiles,"openDoor.png")).convert_alpha()
         self.image = pygame.transform.scale(self.image, (self.image.get_width() * 2.5, self.image.get_height() * 2.5))
+
+class Key(Tile):
+    def __init__(self,c_x,c_y,currentLevel,game):
+        super().__init__("key.png", c_x, c_y, c_x / 48, c_y / 48, "Key")
+        self.image = pygame.transform.scale(self.image, (self.image.get_width() * 1.5, self.image.get_height() * 1.5))
+        self.currentLevel = currentLevel
+        self.game = game
+
+        self.pickable = False
+
+    def update(self):
+        if self.game.player.direction == "right":
+            distance =  math.hypot(self.game.player.rect.right - self.rect.left,
+                              self.game.player.rect.bottom - self.rect.top)
+        elif self.game.player.direction == "left":
+            distance =  math.hypot(self.game.player.rect.left - self.rect.right,
+                              self.game.player.rect.bottom - self.rect.top)
+        if distance <50:
+            self.pickable = True
+        else:
+            self.pickable = False
+
+
+
+
 
 class TileHandler(pygame.sprite.Sprite):
     pathMaps = os.path.join(os.path.dirname(os.getcwd()), 'images/maps')
