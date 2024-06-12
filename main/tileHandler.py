@@ -18,11 +18,17 @@ class Tile(pygame.sprite.Sprite):
         surface.blit(self.image,self.rect)
 
 class healPotion(Tile):
-    def __init__(self,c_x,c_y,currentLevel):
+    def __init__(self,c_x,c_y,currentMap):
         super().__init__("potion.png",c_x,c_y,c_x/48,c_y/48,"healPotion")
 
         self.image = pygame.transform.scale(self.image,(self.image.get_width() * 3, self.image.get_height() * 3))
-        self.currentLevel = currentLevel
+        self.currentMap = currentMap
+class wrongPotion(Tile):
+    def __init__(self,c_x,c_y,currentMap):
+        super().__init__("wrongpotion.png",c_x,c_y,c_x/48,c_y/48,"wrongPotion")
+
+        self.image = pygame.transform.scale(self.image,(self.image.get_width() * 3, self.image.get_height() * 3))
+        self.currentMap = currentMap
 class Door(Tile):
     def __init__(self,c_x,c_y,currentLevel,game):
         super().__init__("closedDoor.png", c_x, c_y, c_x / 48, c_y / 48, "Door")
@@ -31,6 +37,7 @@ class Door(Tile):
         self.currentLevel = currentLevel
 
         self.openable = False
+
         self.open = False
 
 
