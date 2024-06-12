@@ -123,7 +123,7 @@ class UI:
                     elif self.optionChoose == 3:
                         self.game.difficult = "HARD"
 
-                    self.game.level = Level1(self.game,1)
+                    self.game.level = Level1(self.game,10)
                     self.game.tileHandler.loadMap(f"level{self.game.level.getLevel()}/{self.game.level.currentMap}.txt")
 
 

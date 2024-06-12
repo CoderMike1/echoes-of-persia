@@ -27,7 +27,7 @@ class Game:
         self.gameOver = False
 
         #inicjalizacja obiektow
-        self.player = Player(self,3*48,13*48)
+        self.player = Player(self,11*48,13*48)
 
         #self.level = Level1(self,3)
         self.level = None
@@ -48,7 +48,8 @@ class Game:
             self.tileHandler.draw(self.window)
 
             # rysujemy drzwi
-            self.level.door.draw(self.window)
+            if self.level.door.currentMap == self.level.currentMap:
+                self.level.door.draw(self.window)
 
             #rysujemy gracza
             self.player.draw(self.window)

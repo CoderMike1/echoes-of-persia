@@ -11,6 +11,8 @@ class Level(abc.ABC):
         self.traps = pygame.sprite.Group()
         self.potions = pygame.sprite.Group()
 
+        self.key =self.door  =None
+
         self.enemyList = {
             "EASY":EnemyEasy,
             "MEDIUM":EnemyMedium,
@@ -40,6 +42,9 @@ class Level(abc.ABC):
             if trap.currentMap == self.currentMap:
                 trap.update()
 
+        self.door.update()
+        self.key.update()
+
     def draw(self, surface):
         for enemy in self.enemies:
             if enemy.currentMap == self.currentMap:
@@ -53,20 +58,26 @@ class Level(abc.ABC):
             if potion.currentMap == self.currentMap:
                 potion.draw(surface)
 
+        if self.key.currentMap == self.currentMap:
+            self.key.draw(surface)
+
 class Level1(Level):
     def __init__(self,game,currentMap):
         super().__init__(game,currentMap)
-        self.potions.add(wrongPotion(5*48,9*48+4,0), healPotion(7*48,8*48+4,4))
+        self.potions.add(wrongPotion(5*48,9*48+4,0), healPotion(7*48,8*48+4,4), healPotion(15*48,8*48+4,11))
 
-        self.traps.add(Blades(game,6*48,13*48+16,2),Blades(game,15*48,13*48+16,2))
-
-
-        self.enemies.add(self.enemyList[self.game.difficult](game,12*48,13*48,3))
+        self.traps.add(Blades(game,6*48,13*48+16,2),Blades(game,15*48,13*48+16,2), Blades(game,10*48,13*48+16,12))
 
 
+        self.enemies.add(self.enemyList[self.game.difficult](game,12*48,13*48,3),self.enemyList[self.game.difficult](game,10*48,14*48,11))
 
-        self.door = Door(-100,-100,1,game)
-        self.key = Key(-100,-100,1,game)
+
+
+        self.door = Door(9.3*48,11*48-6,13,game)
+
+
+
+        self.key = Key(1*48,3*48+15,10,game)
 
 
 
@@ -128,4 +139,3 @@ class WorkingLevel(Level):
             potion.draw(surface)
 
         self.key.draw(surface)
-       # self.door.draw(surface)

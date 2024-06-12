@@ -30,11 +30,11 @@ class wrongPotion(Tile):
         self.image = pygame.transform.scale(self.image,(self.image.get_width() * 3, self.image.get_height() * 3))
         self.currentMap = currentMap
 class Door(Tile):
-    def __init__(self,c_x,c_y,currentLevel,game):
+    def __init__(self,c_x,c_y,currentMap,game):
         super().__init__("closedDoor.png", c_x, c_y, c_x / 48, c_y / 48, "Door")
         self.game = game
         self.image = pygame.transform.scale(self.image, (self.image.get_width() * 2.5, self.image.get_height() * 2.5))
-        self.currentLevel = currentLevel
+        self.currentMap = currentMap
 
         self.openable = False
 
@@ -65,10 +65,10 @@ class Door(Tile):
         self.image = pygame.transform.scale(self.image, (self.image.get_width() * 2.5, self.image.get_height() * 2.5))
 
 class Key(Tile):
-    def __init__(self,c_x,c_y,currentLevel,game):
+    def __init__(self,c_x,c_y,currentMap,game):
         super().__init__("key.png", c_x, c_y, c_x / 48, c_y / 48, "Key")
         self.image = pygame.transform.scale(self.image, (self.image.get_width() * 1.5, self.image.get_height() * 1.5))
-        self.currentLevel = currentLevel
+        self.currentMap = currentMap
         self.game = game
 
         self.pickable = False

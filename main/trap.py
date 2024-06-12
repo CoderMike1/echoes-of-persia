@@ -88,7 +88,7 @@ class Blades(pygame.sprite.Sprite,Trap):
             self.gapTimeCounter +=1
 
             for enemy in self.game.level.enemies:
-                if enemy.rect.colliderect(self.rect) and self.hitMode:
+                if enemy.rect.colliderect(self.rect) and self.hitMode and enemy.currentMap == self.currentMap:
                     if enemy.direction == "right":
                         enemy.bladeX = self.rect.left
                         self.soundFlag = True
@@ -100,7 +100,7 @@ class Blades(pygame.sprite.Sprite,Trap):
                     self.hitMode = False
 
 
-            if self.rect.colliderect(self.game.player.rect) and self.hitMode and self.gapTimeCounter != -15:
+            if self.rect.colliderect(self.game.player.rect) and self.hitMode and self.gapTimeCounter != -15 and enemy.currentMap == self.level.currentMap:
                 if self.game.player.direction == "right":
                     self.game.player.bladeX = self.rect.left
                 elif self.game.player.direction == "left":
