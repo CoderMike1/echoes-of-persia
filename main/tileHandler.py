@@ -18,19 +18,26 @@ class Tile(pygame.sprite.Sprite):
         surface.blit(self.image,self.rect)
 
 class healPotion(Tile):
-    def __init__(self,c_x,c_y,currentLevel):
+    def __init__(self,c_x,c_y,currentMap):
         super().__init__("potion.png",c_x,c_y,c_x/48,c_y/48,"healPotion")
 
         self.image = pygame.transform.scale(self.image,(self.image.get_width() * 3, self.image.get_height() * 3))
-        self.currentLevel = currentLevel
+        self.currentMap = currentMap
+class wrongPotion(Tile):
+    def __init__(self,c_x,c_y,currentMap):
+        super().__init__("wrongpotion.png",c_x,c_y,c_x/48,c_y/48,"wrongPotion")
+
+        self.image = pygame.transform.scale(self.image,(self.image.get_width() * 3, self.image.get_height() * 3))
+        self.currentMap = currentMap
 class Door(Tile):
-    def __init__(self,c_x,c_y,currentLevel,game):
+    def __init__(self,c_x,c_y,currentMap,game):
         super().__init__("closedDoor.png", c_x, c_y, c_x / 48, c_y / 48, "Door")
         self.game = game
         self.image = pygame.transform.scale(self.image, (self.image.get_width() * 2.5, self.image.get_height() * 2.5))
-        self.currentLevel = currentLevel
+        self.currentMap = currentMap
 
         self.openable = False
+
         self.open = False
 
 
@@ -58,10 +65,10 @@ class Door(Tile):
         self.image = pygame.transform.scale(self.image, (self.image.get_width() * 2.5, self.image.get_height() * 2.5))
 
 class Key(Tile):
-    def __init__(self,c_x,c_y,currentLevel,game):
+    def __init__(self,c_x,c_y,currentMap,game):
         super().__init__("key.png", c_x, c_y, c_x / 48, c_y / 48, "Key")
         self.image = pygame.transform.scale(self.image, (self.image.get_width() * 1.5, self.image.get_height() * 1.5))
-        self.currentLevel = currentLevel
+        self.currentMap = currentMap
         self.game = game
 
         self.pickable = False
@@ -88,11 +95,19 @@ class TileHandler(pygame.sprite.Sprite):
         super().__init__()
         self.game = game
         self.tileMap = []
-        self.background = pygame.image.load(os.path.join(self.pathMaps,'background1.png'))
         #self.all_sprites = pygame.sprite.Group()
+
+        self.backgrounds = {
+            0: pygame.image.load(os.path.join(self.pathMaps, 'background3.png')),
+            1:pygame.image.load(os.path.join(self.pathMaps,'background1.png')),
+            2: pygame.image.load(os.path.join(self.pathMaps, 'background2.png')),
+            3: pygame.image.load(os.path.join(self.pathMaps, 'background3.png')),
+        }
 
 
     def loadMap(self,mapName):
+        print(mapName)
+        self.background = self.backgrounds[int(mapName.split("/")[1].strip(".txt"))%4]
         self.tileMap.clear()
         map = []
         with open(os.path.join(self.pathMaps,mapName) ,"r") as file:

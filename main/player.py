@@ -1,4 +1,7 @@
+import time
+
 import pygame,os,math
+from level import Level1,Level2
 class Player(pygame.sprite.Sprite):
     path = os.path.join(os.path.dirname(os.getcwd()), 'images','player')
     PLAYER_WIDTH = 15
@@ -66,8 +69,11 @@ class Player(pygame.sprite.Sprite):
         self.getPotionMode = False
         self.getPotionCounter = 1
         self.getPotionSoundFlag = False
+        self.getPotionName = ""
 
         self.getKey = False
+
+        self.enterDoorCounter = 1
 
 
 
@@ -163,20 +169,51 @@ class Player(pygame.sprite.Sprite):
 
         im.update({"speared": self.pLoad("speared")})
 
-        im.update({"getPotion1":self.pLoad("getPotion1")})
-        im.update({"getPotion2": self.pLoad("getPotion2")})
-        im.update({"getPotion3": self.pLoad("getPotion3")})
-        im.update({"getPotion4": self.pLoad("getPotion4")})
-        im.update({"getPotion5": self.pLoad("getPotion6")})
-        im.update({"getPotion6": self.pLoad("getPotion5")})
-        im.update({"getPotion7": self.pLoad("getPotion6")})
-        im.update({"getPotion8": self.pLoad("getPotion7")})
-        im.update({"getPotion9": self.pLoad("getPotion8")})
-        im.update({"getPotion10": self.pLoad("getPotion9")})
-        im.update({"getPotion11": self.pLoad("getPotion10")})
-        im.update({"getPotion12": self.pLoad("getPotion11")})
-        im.update({"getPotion13": self.pLoad("getPotion12")})
-        im.update({"getPotion14": self.pLoad("getPotion13")})
+        im.update({"gethealPotion1":self.pLoad("gethealPotion1")})
+        im.update({"gethealPotion2": self.pLoad("gethealPotion2")})
+        im.update({"gethealPotion3": self.pLoad("gethealPotion3")})
+        im.update({"gethealPotion4": self.pLoad("gethealPotion4")})
+        im.update({"gethealPotion5": self.pLoad("gethealPotion6")})
+        im.update({"gethealPotion6": self.pLoad("gethealPotion5")})
+        im.update({"gethealPotion7": self.pLoad("gethealPotion6")})
+        im.update({"gethealPotion8": self.pLoad("gethealPotion7")})
+        im.update({"gethealPotion9": self.pLoad("gethealPotion8")})
+        im.update({"gethealPotion10": self.pLoad("gethealPotion9")})
+        im.update({"gethealPotion11": self.pLoad("gethealPotion10")})
+        im.update({"gethealPotion12": self.pLoad("gethealPotion11")})
+        im.update({"gethealPotion13": self.pLoad("gethealPotion12")})
+        im.update({"gethealPotion14": self.pLoad("gethealPotion13")})
+
+        im.update({"getwrongPotion1": self.pLoad("getwrongPotion1")})
+        im.update({"getwrongPotion2": self.pLoad("getwrongPotion2")})
+        im.update({"getwrongPotion3": self.pLoad("getwrongPotion3")})
+        im.update({"getwrongPotion4": self.pLoad("getwrongPotion4")})
+        im.update({"getwrongPotion5": self.pLoad("getwrongPotion6")})
+        im.update({"getwrongPotion6": self.pLoad("getwrongPotion5")})
+        im.update({"getwrongPotion7": self.pLoad("getwrongPotion7")})
+        im.update({"getwrongPotion8": self.pLoad("getwrongPotion8")})
+        im.update({"getwrongPotion9": self.pLoad("getwrongPotion9")})
+        im.update({"getwrongPotion10": self.pLoad("getwrongPotion10")})
+        im.update({"getwrongPotion11": self.pLoad("getwrongPotion11")})
+        im.update({"getwrongPotion12": self.pLoad("getwrongPotion12")})
+        im.update({"getwrongPotion13": self.pLoad("getwrongPotion13")})
+        im.update({"getwrongPotion14": self.pLoad("getwrongPotion14")})
+
+
+
+
+
+        im.update({"ending1": self.pLoad("ending1")})
+        im.update({"ending2": self.pLoad("ending2")})
+        im.update({"ending3": self.pLoad("ending3")})
+        im.update({"ending4": self.pLoad("endingv4")})
+        im.update({"ending5": self.pLoad("endingv5")})
+        im.update({"ending6": self.pLoad("endingv6")})
+        im.update({"ending7": self.pLoad("endingv7")})
+        im.update({"ending8": self.pLoad("endingv8")})
+        im.update({"ending9": self.pLoad("endingv9")})
+        im.update({"ending10": self.pLoad("endingv10")})
+        im.update({"ending11": self.pLoad("endingv11")})
 
 
 
@@ -256,6 +293,8 @@ class Player(pygame.sprite.Sprite):
                 if 10 < int(self.climbCounter) < 16:
                     if not self.climbSoundFlag:
                         self.climbSoundFlag = True
+                        print("halo")
+                        self.game.sounds.playSound("climb")
                         self.game.sounds.playSound("climb")
                     self.vel_y -= 0.5
                 if int(self.climbCounter) >= 16:
@@ -285,7 +324,9 @@ class Player(pygame.sprite.Sprite):
                 if 10 < int(self.climbCounter) < 18:
                     if not self.climbSoundFlag:
                         self.climbSoundFlag = True
+                        print("halo")
                         self.game.sounds.playSound("climb")
+
                     self.vel_y -=1
                 if self.direction == "right":
                     if int(self.climbCounter) >18:
@@ -551,16 +592,21 @@ class Player(pygame.sprite.Sprite):
                 self.getPotionSoundFlag = True
             if self.getPotionCounter > 15:
                 self.game.sounds.stopSound("drinking")
-                self.game.sounds.playSound("healing")
+
                 self.getPotionCounter = 1
                 self.getPotionMode = False
                 self.getPotionSoundFlag = False
-                self.game.ui.playerLifes = self.game.ui.playerLifes + 1 if self.game.ui.playerLifes < self.game.ui.playerMaxLifes else self.game.ui.playerMaxLifes
+                if self.getPotionName == "healPotion":
+                    self.game.sounds.playSound("healing")
+                    self.game.ui.playerLifes = self.game.ui.playerLifes + 1 if self.game.ui.playerLifes < self.game.ui.playerMaxLifes else self.game.ui.playerMaxLifes
+                elif self.getPotionName == "wrongPotion":
+                    self.game.sounds.playSound("playerGetDamage")
+                    self.game.ui.playerLifes -=1
             if self.direction == "right":
-                self.image = pygame.transform.flip(self.images[f"getPotion{int(self.getPotionCounter)}"],True,False)
+                self.image = pygame.transform.flip(self.images[f"get{self.getPotionName}{int(self.getPotionCounter)}"],True,False)
                 self.rect = self.image.get_rect(bottomleft=(self.current_left,self.current_bottom))
             elif self.direction == "left":
-                self.image = self.images[f"getPotion{int(self.getPotionCounter)}"]
+                self.image = self.images[f"get{self.getPotionName}{int(self.getPotionCounter)}"]
                 self.rect = self.image.get_rect(bottomright=(self.current_right,self.current_bottom))
     def speared(self):
         self.isDead = self.isSpeared =True
@@ -591,6 +637,20 @@ class Player(pygame.sprite.Sprite):
             self.image = self.images[f"dying{int(self.deadCounter)}"]
             self.rect = self.image.get_rect(bottomright=(self.current_right,self.current_bottom))
 
+    def enterDoor(self):
+        self.enterDoorCounter += 0.1
+        if self.enterDoorCounter > 12:
+            self.enterDoorCounter = 11
+            self.game.newLevel(self.game.level.getLevel()+1)
+        if self.enterDoorCounter < 8:
+            self.vel_x = 0.5
+        if self.enterDoorCounter%2:
+            self.vel_y =-0.1
+        self.image = self.images[f"ending{int(self.enterDoorCounter)}"]
+        self.rect = self.image.get_rect(top=self.current_top,left=self.current_left)
+
+
+
     def update(self):
         #reset oraz dodawanie do wartosci
         self.vel_x = 0
@@ -616,6 +676,7 @@ class Player(pygame.sprite.Sprite):
         elif self.game.ui.playerLifes <1 and self.isSpeared:
             self.speared()
         else:
+
             if self.getHitCounter > 0:
                 self.getHit()
             else:
@@ -661,18 +722,23 @@ class Player(pygame.sprite.Sprite):
                 # podnoszenie eliksiru
                 for potion in self.game.level.potions:
                     if self.direction == "right":
-                        if potion.rect.colliderect((self.rect.x + self.game.PIXEL_SIZE, self.rect.y, self.rect.width, self.rect.height)) and keys[pygame.K_UP] and not self.attack:
+                        if potion.rect.colliderect((self.rect.x + self.game.PIXEL_SIZE, self.rect.y, self.rect.width, self.rect.height)) and keys[pygame.K_UP] and not self.attack and potion.currentMap == self.game.level.currentMap:
                             self.getPotionMode = True
+                            self.getPotionName = potion.name
                             potion.kill()
 
                     elif self.direction == "left":
-                        if potion.rect.colliderect((self.rect.x - self.game.PIXEL_SIZE, self.rect.y, self.rect.width, self.rect.height)) and keys[pygame.K_UP] and not self.attack:
+                        if potion.rect.colliderect((self.rect.x - self.game.PIXEL_SIZE, self.rect.y, self.rect.width, self.rect.height)) and keys[pygame.K_UP] and not self.attack and potion.currentMap == self.game.level.currentMap:
                             self.getPotionMode = True
+                            self.getPotionName = potion.name
                             potion.kill()
+
                 if keys[pygame.K_UP] and self.game.level.door.openable and not self.game.level.door.open and self.getKey:
                     self.getKey = False
                     self.game.level.door.open = True
                     self.game.sounds.playSound("openDoor")
+                if self.game.level.door.open:
+                    self.enterDoor()
 
 
                 #podnoszenie klucza
@@ -747,7 +813,7 @@ class Player(pygame.sprite.Sprite):
                     self.vel_x = 0
         #wykrywanie kolizji z wrogami
         for enemy in self.game.level.enemies:
-            if enemy.rect.colliderect((self.rect.x + self.vel_x*2,self.rect.y,self.rect.width,self.rect.height)) and not enemy.isDead:
+            if enemy.rect.colliderect((self.rect.x + self.vel_x*2,self.rect.y,self.rect.width,self.rect.height)) and not enemy.isDead and enemy.currentMap == self.game.level.currentMap:
                 self.nearestEnemy = enemy
                 if self.vel_x > 0:
                     self.rect.right = enemy.rect.left
