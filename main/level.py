@@ -75,7 +75,7 @@ class Level1(Level):
 
         self.door = Door(9.3*48,11*48-6,13,game)
 
-
+        #self.key = Key(5*48, 13 * 48 + 15, 13, game)
 
         self.key = Key(1*48,3*48+15,10,game)
 
@@ -90,6 +90,24 @@ class Level1(Level):
 class Level2(Level):
     def __init__(self,game,currentMap):
         super().__init__(game,currentMap)
+
+
+        self.traps.add(Blades(game,9.5*48,13.3*48+3,10),Blades(game,5*48,7.3*48+3,13),
+                       Blades(game,13.5*48,11.3*48+3,13),Blades(game,16.5*48,13.3*48+3,12),
+                       Blades(game,13.5*48,13.3*48+3,12),Blades(game,10.5*48,13.3*48+3,12),
+                       Blades(game,7.5*48,13.3*48+3,12),Blades(game,4.5*48,13.3*48+3,12),
+                       Blades(game,1.5*48,13.3*48+3,12),Blades(game,15.5*48,13.3*48,21))
+        self.potions.add(healPotion(5*48,8*48+6,2),wrongPotion(3*48,8*48+6,0))
+
+        self.enemies.add(self.enemyList[self.game.difficult](game, 11 * 48, 13 * 48, 12),
+                         self.enemyList[self.game.difficult](game, 11 * 48, 13 * 48, 22),
+                         self.enemyList[self.game.difficult](game, 4 * 48, 13 * 48, 21) )
+
+
+        self.door = Door(10 * 48, 11 * 48 - 6, 20, game)
+
+        self.key = Key(6 * 48, 9 * 48 + 15, 22, game)
+
 
     def getLevel(self):
         return 2

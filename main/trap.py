@@ -100,7 +100,7 @@ class Blades(pygame.sprite.Sprite,Trap):
                     self.hitMode = False
 
 
-            if self.rect.colliderect(self.game.player.rect) and self.hitMode and self.gapTimeCounter != -15 and enemy.currentMap == self.level.currentMap:
+            if self.rect.colliderect(self.game.player.rect) and self.hitMode and self.gapTimeCounter != -15 and self.currentMap == self.game.level.currentMap:
                 if self.game.player.direction == "right":
                     self.game.player.bladeX = self.rect.left
                 elif self.game.player.direction == "left":

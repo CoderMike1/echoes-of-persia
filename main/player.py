@@ -1,4 +1,7 @@
+import time
+
 import pygame,os,math
+from level import Level1,Level2
 class Player(pygame.sprite.Sprite):
     path = os.path.join(os.path.dirname(os.getcwd()), 'images','player')
     PLAYER_WIDTH = 15
@@ -636,18 +639,15 @@ class Player(pygame.sprite.Sprite):
 
     def enterDoor(self):
         self.enterDoorCounter += 0.1
-        print(self.enterDoorCounter)
-        if self.enterDoorCounter == 1.1:
-            self.rect.right = self.game.level.door.rect.left
         if self.enterDoorCounter > 12:
             self.enterDoorCounter = 11
-            self.vel_x =10000
-
+            self.game.newLevel(self.game.level.getLevel()+1)
         if self.enterDoorCounter < 8:
             self.vel_x = 0.5
-        self.vel_y = -0.01
+        if self.enterDoorCounter%2:
+            self.vel_y =-0.1
         self.image = self.images[f"ending{int(self.enterDoorCounter)}"]
-        self.rect = self.image.get_rect(topleft=(self.current_left,self.current_top))
+        self.rect = self.image.get_rect(top=self.current_top,left=self.current_left)
 
 
 

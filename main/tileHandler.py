@@ -95,11 +95,19 @@ class TileHandler(pygame.sprite.Sprite):
         super().__init__()
         self.game = game
         self.tileMap = []
-        self.background = pygame.image.load(os.path.join(self.pathMaps,'background1.png'))
         #self.all_sprites = pygame.sprite.Group()
+
+        self.backgrounds = {
+            0: pygame.image.load(os.path.join(self.pathMaps, 'background3.png')),
+            1:pygame.image.load(os.path.join(self.pathMaps,'background1.png')),
+            2: pygame.image.load(os.path.join(self.pathMaps, 'background2.png')),
+            3: pygame.image.load(os.path.join(self.pathMaps, 'background3.png')),
+        }
 
 
     def loadMap(self,mapName):
+        print(mapName)
+        self.background = self.backgrounds[int(mapName.split("/")[1].strip(".txt"))%4]
         self.tileMap.clear()
         map = []
         with open(os.path.join(self.pathMaps,mapName) ,"r") as file:

@@ -1,3 +1,5 @@
+import time
+
 import pygame
 from player import Player
 from tileHandler import TileHandler
@@ -18,7 +20,7 @@ class Game:
         pygame.mouse.set_visible(False)
 
 
-        # 1.txt - Menu , 2 - Gra , 3 - Pauza
+        # 1.txt - Menu , 2 - Gra , 3 - Pauza 4 - Wygrana 5-Porazka
         self.gameStatus = 1
         self.difficult = None
 
@@ -29,21 +31,35 @@ class Game:
         #inicjalizacja obiektow
         self.player = Player(self,11*48,13*48)
 
-        #self.level = Level1(self,3)
         self.level = None
-        #self.level = WorkingLevel(self,11)
 
         self.tileHandler = TileHandler(self)
 
-        #self.tileHandler.loadMap("level1/map11.txt")
-        #self.tileHandler.loadMap(f"level{self.level.getLevel()}/{self.level.currentMap}.txt")
 
         self.ui = UI(self)
 
-
+    def newLevel(self,level):
+        if level == 1:
+            self.gameStatus = 2
+            self.gameOver = False
+            self.ui.playerLifes = self.ui.playerMaxLifes
+            self.ui.startTime = pygame.time.get_ticks()
+            del self.level, self.player
+            self.level = Level1(self, 1)
+            self.player = Player(self, 19 * 48, 13 * 48)
+            self.tileHandler.loadMap(f"level{self.level.getLevel()}/{self.level.currentMap}.txt")
+        elif level == 2:
+            del self.level, self.player
+            time.sleep(15)
+            self.level = Level2(self,1)
+            self.player = Player(self,3*48,8*48)
+            self.tileHandler.loadMap(f"level{self.level.getLevel()}/{self.level.currentMap}.txt")
+            #dzwiek nowy level
+        elif level == 3:
+            self.gameStatus = 4
 
     def draw(self):
-        if self.gameStatus == 2:
+        if self.gameStatus == 2 or self.gameStatus == 4 or self.gameStatus ==5 or self.gameStatus == 3:
             # rysujemy mape
             self.tileHandler.draw(self.window)
 
@@ -58,7 +74,6 @@ class Game:
             # rysujemy rzeczy na levelu
             self.level.draw(self.window)
 
-
             #rysujemy statystyki
             self.ui.draw(self.window)
         elif self.gameStatus == 1:
@@ -71,6 +86,10 @@ class Game:
 
 
     def update(self):
+        if self.gameOver:
+            self.gameStatus = 5
+
+
         if self.gameStatus == 2:
             #update gracza
             self.player.update()
@@ -93,7 +112,10 @@ class Game:
 
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_ESCAPE:
-                        running = False
+                        if self.gameStatus == 2:
+                            self.gameStatus = 3
+                        elif self.gameStatus == 3:
+                            self.gameStatus = 2
 
             self.update()
             self.draw()
