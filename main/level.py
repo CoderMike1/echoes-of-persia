@@ -75,7 +75,10 @@ class Level1(Level):
 
         self.door = Door(9.3*48,11*48-6,13,game)
 
-        #self.key = Key(5*48, 13 * 48 + 15, 13, game)
+        #tymczasowo klucz obok drzwi
+        #self.key = Key(3 * 48, 13 * 48 + 15, 13, game)
+
+
 
         self.key = Key(1*48,3*48+15,10,game)
 
@@ -106,6 +109,12 @@ class Level2(Level):
 
         self.door = Door(10 * 48, 11 * 48 - 6, 20, game)
 
+        #tymczasowy klucz
+        #self.key = Key(6 * 48, 13 * 48 + 15, 20, game)
+
+
+
+
         self.key = Key(6 * 48, 9 * 48 + 15, 22, game)
 
 
@@ -114,21 +123,22 @@ class Level2(Level):
 
 
 
+
 class WorkingLevel(Level):
     def __init__(self,game,currentMap):
         super().__init__(game,currentMap)
 
 
-        #self.enemies.add(EnemyEasy(game,900,100,11))
-        #self.traps.add(Blades(game,500,640,11))
-
-
-        self.potions.add(wrongPotion(15*48,672-44,11))
-        self.potions.add(healPotion(4 * 48, 672 - 44, 11))
-        self.door = Door(500,525,11,game)
-
-
-        self.key = Key(300,645,11,game)
+        # self.enemies.add(EnemyEasy(game,900,100,11))
+        # self.traps.add(Blades(game,500,640,11))
+        #
+        #
+        # self.potions.add(wrongPotion(15*48,672-44,11))
+        # self.potions.add(healPotion(4 * 48, 672 - 44, 11))
+        # self.door = Door(500,525,11,game)
+        #
+        #
+        # self.key = Key(300,645,11,game)
 
 
 

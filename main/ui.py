@@ -2,7 +2,7 @@ import pygame,os
 
 from level import Level1,Level2,WorkingLevel
 class UI:
-    path = os.path.join(os.path.dirname(os.getcwd()), 'images', 'ui')
+    path = os.path.join(os.path.dirname(os.getcwd()), 'images', 'maps')
     BLACK = (0, 0, 0)
     WHITE =(255,255,255)
     RED = (255,0,0)
@@ -10,6 +10,7 @@ class UI:
     PURPLE = (109,50,168)
     GRAY = (128,128,128)
     ORANGE = (245,121,20)
+    MINT = (127, 232, 121)
 
     def __init__(self,game):
         self.game = game
@@ -21,10 +22,21 @@ class UI:
         self.optionCounter = 101
 
         self.chooseDifficult = False
+        self.chooseOptionsTab = False
+        self.chooseKeyboardControls = False
+        self.chooseCredits = False
 
     def loadData(self):
         self.rect = pygame.Rect(0, 0, self.game.WIDTH, self.game.PIXEL_SIZE)
         self.font = pygame.font.SysFont("franklingothicdemi", 36)
+        self.winfont = pygame.font.SysFont("franklingothicdemi", 75)
+        self.titleFont = pygame.font.SysFont("georgia", 80)
+        self.pFont = pygame.font.SysFont("franklingothicdemi",20)
+        self.backgroundMenu = pygame.image.load(os.path.join(self.path, "backgroundMenu.png")).convert_alpha()
+        self.backgroundMenu_x = 0
+        self.backgroundMenu_velocity = 0
+        self.controlKeyboardTable = pygame.image.load(os.path.join(self.path,"controlKeyboardTable.png")).convert_alpha()
+        self.creditsTable = pygame.image.load(os.path.join(self.path, "creditsTable.png")).convert_alpha()
         self.heartRect = pygame.Rect(15,10,30,30)
         self.enemyHeartRect = pygame.Rect(self.game.WIDTH - 15,10,30,30)
         self.enemyHeartRect.right = self.game.WIDTH - 15
@@ -35,8 +47,27 @@ class UI:
     def draw(self,surface):
         keys = pygame.key.get_pressed()
         if self.game.gameStatus == 1:
+
+
+
+            surface.blit(self.backgroundMenu, (self.backgroundMenu_x, 0))
+            self.backgroundMenu_x += self.backgroundMenu_velocity
+            if self.backgroundMenu_x <= -440:
+                self.backgroundMenu_velocity = 1
+            elif self.backgroundMenu_x >= 0:
+                self.backgroundMenu_velocity = -1
+
+            text = self.titleFont.render("ECHOES OF PERSIA", True, self.MINT)
+            surface.blit(text, ((self.game.WIDTH / 2) - (text.get_width() / 2), self.game.HEIGHT / 17))
+
+            text = self.pFont.render("Press k for Keyboard controls", True, self.RED)
+            surface.blit(text, ((self.game.WIDTH / 1.2) - (text.get_width() / 2), self.game.HEIGHT / 1.1))
+
+            text = self.pFont.render("Press c for credits", True, self.MINT)
+            surface.blit(text, ((self.game.WIDTH / 9) - (text.get_width() / 2), self.game.HEIGHT / 1.1))
+
             self.optionCounter +=1
-            if not self.chooseDifficult:
+            if not self.chooseDifficult and not self.chooseOptionsTab and not self.chooseKeyboardControls and not self.chooseCredits:
                 if keys[pygame.K_DOWN] and self.optionCounter > 20:
                     self.optionCounter = 1
                     self.optionChoose +=1
@@ -47,25 +78,22 @@ class UI:
                     self.optionChoose -=1
                     if self.optionChoose <1:
                         self.optionChoose = 3
-
-
-                surface.fill(self.PURPLE)
                 if self.optionChoose == 1:
                     text = self.font.render("START GAME",True,self.WHITE)
                 else:
-                    text = self.font.render("START GAME", True, self.BLACK)
+                    text = self.font.render("START GAME", True, self.ORANGE)
                 surface.blit(text,((self.game.WIDTH/2) -(text.get_width()/2), self.game.HEIGHT/4))
 
                 if self.optionChoose == 2:
                     text = self.font.render("OPTIONS",True,self.WHITE)
                 else:
-                    text = self.font.render("OPTIONS", True, self.BLACK)
+                    text = self.font.render("OPTIONS", True, self.ORANGE)
                 surface.blit(text,((self.game.WIDTH/2) -(text.get_width()/2), self.game.HEIGHT/3))
 
                 if self.optionChoose == 3:
                     text = self.font.render("QUIT",True,self.WHITE)
                 else:
-                    text = self.font.render("QUIT", True, self.BLACK)
+                    text = self.font.render("QUIT", True, self.ORANGE)
                 surface.blit(text,((self.game.WIDTH/2) -(text.get_width()/2), self.game.HEIGHT/2))
 
 
@@ -74,11 +102,18 @@ class UI:
                     if self.optionChoose == 1:
                         self.chooseDifficult = True
                     elif self.optionChoose == 2:
-                        pass
+                        self.chooseOptionsTab = True
                     elif self.optionChoose == 3:
                         pygame.quit()
 
-            else:
+                if keys[pygame.K_k] and self.optionCounter > 60:
+                    self.optionCounter = 1
+                    self.chooseKeyboardControls = True
+                if keys[pygame.K_c] and self.optionCounter > 60:
+                    self.optionCounter = 1
+                    self.chooseCredits = True
+
+            elif self.chooseDifficult:
                 if keys[pygame.K_RIGHT] and self.optionCounter > 20:
                     self.optionCounter = 1
                     self.optionChoose += 1
@@ -90,30 +125,30 @@ class UI:
                     if self.optionChoose < 1:
                         self.optionChoose = 3
 
-                surface.fill(self.PURPLE)
-                text = self.font.render("Choose the difficulty:",True,self.BLACK)
+                text = self.font.render("Choose the difficulty:",True,self.MINT)
                 surface.blit(text, ((self.game.WIDTH / 2) - (text.get_width() / 2), self.game.HEIGHT / 4))
 
                 if self.optionChoose == 1:
                     text = self.font.render("EASY", True, self.WHITE)
                 else:
-                    text = self.font.render("EASY", True, self.BLACK)
+                    text = self.font.render("EASY", True, self.ORANGE)
                 surface.blit(text, ((self.game.WIDTH / 3) - (text.get_width() / 2), self.game.HEIGHT / 3))
 
                 if self.optionChoose == 2:
                     text = self.font.render("MEDIUM", True, self.WHITE)
                 else:
-                    text = self.font.render("MEDIUM", True, self.BLACK)
+                    text = self.font.render("MEDIUM", True, self.ORANGE)
                 surface.blit(text, ((self.game.WIDTH / 2) - (text.get_width() / 2), self.game.HEIGHT / 3))
 
                 if self.optionChoose == 3:
                     text = self.font.render("HARD", True, self.WHITE)
                 else:
-                    text = self.font.render("HARD", True, self.BLACK)
+                    text = self.font.render("HARD", True, self.ORANGE)
                 surface.blit(text, ((self.game.WIDTH / 1.5) - (text.get_width() / 2), self.game.HEIGHT / 3))
 
                 if keys[pygame.K_RETURN] and self.optionCounter > 20:
                     self.game.gameStatus = 2
+                    self.optionCounter = 1
                     if self.optionChoose == 1:
                         self.game.difficult = "EASY"
                     elif self.optionChoose == 2:
@@ -121,9 +156,72 @@ class UI:
                     elif self.optionChoose == 3:
                         self.game.difficult = "HARD"
 
-                    self.game.level = Level1(self.game,1)
-                    #self.game.level = Level2(self.game, 21 )
+                    #self.game.level = Level1(self.game,1)
+                    self.game.level = Level1(self.game, 13)
+                    self.game.sounds.stopSound("menuMusic")
+                    self.game.sounds.playSound("1level")
+                    self.game.sounds.playSound("music")
                     self.game.tileHandler.loadMap(f"level{self.game.level.getLevel()}/{self.game.level.currentMap}.txt")
+                if keys[pygame.K_ESCAPE]:
+                    self.chooseDifficult = False
+            elif self.chooseOptionsTab:
+                if keys[pygame.K_RIGHT] and self.optionCounter > 20:
+                    self.optionCounter = 1
+                    self.optionChoose += 1
+                    if self.optionChoose > 3:
+                        self.optionChoose = 1
+                elif keys[pygame.K_LEFT] and self.optionCounter > 20:
+                    self.optionCounter = 1
+                    self.optionChoose -= 1
+                    if self.optionChoose < 1:
+                        self.optionChoose = 3
+
+                text = self.font.render("Sound volume:",True,self.MINT)
+                surface.blit(text, ((self.game.WIDTH / 2) - (text.get_width() / 2), self.game.HEIGHT / 4))
+
+                if self.optionChoose == 1:
+                    text = self.font.render("LOW", True, self.WHITE)
+                else:
+                    text = self.font.render("LOW", True, self.ORANGE)
+                surface.blit(text, ((self.game.WIDTH / 3) - (text.get_width() / 2), self.game.HEIGHT / 3))
+
+                if self.optionChoose == 2:
+                    text = self.font.render("MEDIUM", True, self.WHITE)
+                else:
+                    text = self.font.render("MEDIUM", True, self.ORANGE)
+                surface.blit(text, ((self.game.WIDTH / 2) - (text.get_width() / 2), self.game.HEIGHT / 3))
+
+                if self.optionChoose == 3:
+                    text = self.font.render("HIGH", True, self.WHITE)
+                else:
+                    text = self.font.render("HIGH", True, self.ORANGE)
+                surface.blit(text, ((self.game.WIDTH / 1.5) - (text.get_width() / 2), self.game.HEIGHT / 3))
+
+                if keys[pygame.K_RETURN] and self.optionCounter > 20:
+                    self.optionCounter = 1
+                    if self.optionChoose == 1:
+                        self.game.sounds.soundVolume = 0.3
+                    elif self.optionChoose == 2:
+                        self.game.sounds.soundVolume = 0.6
+                    elif self.optionChoose == 3:
+                        self.game.sounds.soundVolume = 0.9
+                    self.chooseOptionsTab = False
+                    self.optionChoose = 0
+                if keys[pygame.K_ESCAPE]:
+                    self.chooseOptionsTab = False
+
+
+            elif self.chooseKeyboardControls:
+                surface.blit(self.controlKeyboardTable,(0,0))
+                if keys[pygame.K_k] and self.optionCounter > 20:
+                    self.optionCounter = 1
+                    self.chooseKeyboardControls = False
+
+            elif self.chooseCredits:
+                surface.blit(self.creditsTable,(0,0))
+                if keys[pygame.K_c] and self.optionCounter > 20:
+                    self.optionCounter = 1
+                    self.chooseCredits = False
 
 
 
@@ -226,9 +324,9 @@ class UI:
             overlay.fill((97, 226, 0, 128))
 
             surface.blit(overlay, (0, 0))
-            text = self.font.render("YOU WON!",True,self.WHITE)
+            text = self.winfont.render("YOU WON!",True,self.ORANGE)
             surface.blit(text,
-                         (((self.game.WIDTH / 2) - (text.get_width() / 2), self.game.HEIGHT / 3)))
+                         (((self.game.WIDTH / 2) - (text.get_width() / 2), self.game.HEIGHT / 7)))
             text = self.font.render("YOUR TIME:", True, self.WHITE)
             surface.blit(text,
                          (((self.game.WIDTH / 2) - (text.get_width() / 2), self.game.HEIGHT / 2.5)))
@@ -271,7 +369,7 @@ class UI:
                     self.optionChoose = 2
 
             if keys[pygame.K_RETURN] and self.optionCounter > 20:
-                self.optionCounter = 100
+                self.optionCounter = 1
                 if self.optionChoose == 1:
                     self.game.newLevel(1)
                 elif self.optionChoose == 2:
