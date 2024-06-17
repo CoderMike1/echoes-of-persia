@@ -156,8 +156,7 @@ class UI:
                     elif self.optionChoose == 3:
                         self.game.difficult = "HARD"
 
-                    #self.game.level = Level1(self.game,1)
-                    self.game.level = Level1(self.game, 13)
+                    self.game.level = Level1(self.game,1)
                     self.game.sounds.stopSound("menuMusic")
                     self.game.sounds.playSound("1level")
                     self.game.sounds.playSound("music")
