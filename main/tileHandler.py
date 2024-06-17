@@ -5,9 +5,10 @@ import pygame,os,math
 class Tile(pygame.sprite.Sprite):
     pathTiles = os.path.join(os.path.dirname(os.getcwd()), 'images','tiles')
 
-    def __init__(self,image,c_x,c_y,col,row,name):
+    def __init__(self,image,c_x,c_y,col,row,name,scale=1):
         super().__init__()
         self.image = pygame.image.load(os.path.join(self.pathTiles,image)).convert_alpha()
+        self.image = pygame.transform.scale(self.image,(self.image.get_width() * scale, self.image.get_height() * scale))
         self.rect = self.image.get_rect()
         self.rect.center = c_x,c_y
         self.row = row
@@ -95,6 +96,7 @@ class TileHandler(pygame.sprite.Sprite):
         super().__init__()
         self.game = game
         self.tileMap = []
+        self.mapname = None
         #self.all_sprites = pygame.sprite.Group()
 
         self.backgrounds = {
@@ -107,6 +109,7 @@ class TileHandler(pygame.sprite.Sprite):
 
     def loadMap(self,mapName):
         print(mapName)
+        self.mapname = mapName
         self.background = self.backgrounds[int(mapName.split("/")[1].strip(".txt"))%4]
         self.tileMap.clear()
         map = []
@@ -120,8 +123,42 @@ class TileHandler(pygame.sprite.Sprite):
         for x in map:
             for y in x:
                 if y == '1':
-                    self.tileMap.append(Tile('tile1.png', col*self.game.PIXEL_SIZE,row*self.game.PIXEL_SIZE,col,row,"tile1"))
+                    self.tileMap.append(Tile('new1.png', col*self.game.PIXEL_SIZE,row*self.game.PIXEL_SIZE,col,row,"tile1",scale=3))
+                if y == '2':
+                    self.tileMap.append(
+                        Tile('new2.png', col * self.game.PIXEL_SIZE, row * self.game.PIXEL_SIZE, col, row, "tile1",scale=3))
                     #self.all_sprites.add(Tile('tile1.png', col*self.game.PIXEL_SIZE,row*self.game.PIXEL_SIZE))
+                if y == '3':
+                    self.tileMap.append(
+                        Tile('new3.png', col * self.game.PIXEL_SIZE, row * self.game.PIXEL_SIZE, col, row, "tile1",
+                             scale=3))
+                if y == '4':
+                    self.tileMap.append(
+                        Tile('new4.png', col * self.game.PIXEL_SIZE, row * self.game.PIXEL_SIZE, col, row, "tile1",
+                             scale=3))
+
+                if y == '5':
+                    self.tileMap.append(
+                        Tile('l2t1.png', col * self.game.PIXEL_SIZE, row * self.game.PIXEL_SIZE, col, row, "tile1",
+                             scale=3))
+                if y == '6':
+                    self.tileMap.append(
+                        Tile('l2t2.png', col * self.game.PIXEL_SIZE, row * self.game.PIXEL_SIZE, col, row, "tile1",
+                             scale=3))
+
+                if y == '7':
+                    self.tileMap.append(
+                        Tile('l2t3.png', col * self.game.PIXEL_SIZE, row * self.game.PIXEL_SIZE, col, row, "tile1",
+                             scale=3))
+                if y == '8':
+                    self.tileMap.append(
+                        Tile('l2t4.png', col * self.game.PIXEL_SIZE, row * self.game.PIXEL_SIZE, col, row, "tile1",
+                             scale=3))
+                if y == '9':
+                    self.tileMap.append(
+                        Tile('l2t5.png', col * self.game.PIXEL_SIZE, row * self.game.PIXEL_SIZE, col, row, "tile1",
+                             scale=3))
+
                 col +=1
 
             col = 0

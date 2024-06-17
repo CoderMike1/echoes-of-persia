@@ -25,6 +25,7 @@ class Game:
         self.difficult = None
 
         self.sounds = Sound()
+        self.sounds.playSound("menuMusic")
 
         self.gameOver = False
 
@@ -33,6 +34,7 @@ class Game:
 
         self.level = None
 
+
         self.tileHandler = TileHandler(self)
 
 
@@ -40,22 +42,28 @@ class Game:
 
     def newLevel(self,level):
         if level == 1:
+            self.sounds.playSound("1level")
             self.gameStatus = 2
             self.gameOver = False
             self.ui.playerLifes = self.ui.playerMaxLifes
             self.ui.startTime = pygame.time.get_ticks()
             del self.level, self.player
             self.level = Level1(self, 1)
-            self.player = Player(self, 19 * 48, 13 * 48)
+            self.player = Player(self, 11 * 48, 13 * 48)
             self.tileHandler.loadMap(f"level{self.level.getLevel()}/{self.level.currentMap}.txt")
         elif level == 2:
             del self.level, self.player
-            time.sleep(15)
+            self.sounds.stopSound("music")
+            self.sounds.playSound("nextLevel")
+            time.sleep(10)
+            self.sounds.playSound("1level")
+            self.sounds.playSound("music2")
             self.level = Level2(self,1)
             self.player = Player(self,3*48,8*48)
             self.tileHandler.loadMap(f"level{self.level.getLevel()}/{self.level.currentMap}.txt")
-            #dzwiek nowy level
         elif level == 3:
+            self.sounds.stopSound("music")
+            self.sounds.playSound("gamewin")
             self.gameStatus = 4
 
     def draw(self):

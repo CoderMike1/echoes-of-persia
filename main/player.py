@@ -210,7 +210,7 @@ class Player(pygame.sprite.Sprite):
         im.update({"ending5": self.pLoad("endingv5")})
         im.update({"ending6": self.pLoad("endingv6")})
         im.update({"ending7": self.pLoad("endingv7")})
-        im.update({"ending8": self.pLoad("endingv8")})
+        im.update({"ending8": self.pLoad("endingv11")})
         im.update({"ending9": self.pLoad("endingv9")})
         im.update({"ending10": self.pLoad("endingv10")})
         im.update({"ending11": self.pLoad("endingv11")})
@@ -283,7 +283,6 @@ class Player(pygame.sprite.Sprite):
                 if tile.rect.colliderect((self.rect.x - self.game.PIXEL_SIZE, self.rect.y - (self.game.PIXEL_SIZE * 4),
                                           self.rect.width, self.rect.height)):
                     check3 = False
-
         if check1 and check2 and check3:
             self.climb = True
             self.vel_y = 0
@@ -293,7 +292,6 @@ class Player(pygame.sprite.Sprite):
                 if 10 < int(self.climbCounter) < 16:
                     if not self.climbSoundFlag:
                         self.climbSoundFlag = True
-                        print("halo")
                         self.game.sounds.playSound("climb")
                         self.game.sounds.playSound("climb")
                     self.vel_y -= 0.5
@@ -324,13 +322,11 @@ class Player(pygame.sprite.Sprite):
                 if 10 < int(self.climbCounter) < 18:
                     if not self.climbSoundFlag:
                         self.climbSoundFlag = True
-                        print("halo")
                         self.game.sounds.playSound("climb")
-
                     self.vel_y -=1
                 if self.direction == "right":
                     if int(self.climbCounter) >18:
-                        self.rect = self.image.get_rect(bottom=bottomWall-self.game.PIXEL_SIZE,right=self.rect.right+self.game.PIXEL_SIZE)
+                        self.rect = self.image.get_rect(bottom=bottomWall+self.game.PIXEL_SIZE,right=self.rect.right+self.game.PIXEL_SIZE)
                         self.climb = False
                         self.climbSoundFlag = False
                         self.climb4blockFlag = False
@@ -340,7 +336,7 @@ class Player(pygame.sprite.Sprite):
 
                 elif self.direction == "left":
                     if int(self.climbCounter) >18:
-                        self.rect = self.image.get_rect(bottom=bottomWall+self.game.PIXEL_SIZE,right=self.rect.right-self.game.PIXEL_SIZE)
+                        self.rect = self.image.get_rect(bottom=bottomWall-self.game.PIXEL_SIZE,right=self.rect.right-self.game.PIXEL_SIZE)
                         self.climb = False
                         self.climbSoundFlag = False
                         self.climb4blockFlag = False
@@ -552,9 +548,11 @@ class Player(pygame.sprite.Sprite):
                     else:
                         self.rect = self.image.get_rect(topright=(self.current_right, self.current_top))
                 elif self.pickUpSwordCollisionLeft:
+                    print("wtf")
                     self.attack = False
                     self.rect = self.image.get_rect(topright=(self.current_right, self.current_top))
                 elif self.pickUpSwordCollisionRight:
+                    print("wtf2")
                     self.attack = False
                     self.rect = self.image.get_rect(topleft=(self.current_left, self.current_top))
             elif not self.attack:
@@ -621,6 +619,7 @@ class Player(pygame.sprite.Sprite):
             self.rect = self.image.get_rect(bottomright=(self.bladeX,self.current_bottom))
         self.game.gameOver = True
         self.game.ui.playerLifes = 0
+        self.game.sounds.playSound("gameover")
     def dead(self):
         self.isDead = True
         self.deadCounter += 0.1
@@ -628,6 +627,7 @@ class Player(pygame.sprite.Sprite):
 
             self.deadCounter = 6
             self.game.gameOver = True
+            self.game.sounds.playSound("gameover")
 
         if self.direction == "right":
             self.image = pygame.transform.flip(self.images[f"dying{int(self.deadCounter)}"],True,False)
@@ -639,8 +639,18 @@ class Player(pygame.sprite.Sprite):
 
     def enterDoor(self):
         self.enterDoorCounter += 0.1
-        if self.enterDoorCounter > 12:
-            self.enterDoorCounter = 11
+        # if self.enterDoorCounter > 12:
+        #     self.enterDoorCounter = 11
+        #     self.game.newLevel(self.game.level.getLevel()+1)
+        # if self.enterDoorCounter < 8:
+        #     self.vel_x = 0.5
+        # if self.enterDoorCounter%2:
+        #     self.vel_y =-0.1
+        # self.image = self.images[f"ending{int(self.enterDoorCounter)}"]
+        # self.rect = self.image.get_rect(top=self.current_top,left=self.current_left)
+
+        if self.enterDoorCounter > 9:
+            self.enterDoorCounter = 8
             self.game.newLevel(self.game.level.getLevel()+1)
         if self.enterDoorCounter < 8:
             self.vel_x = 0.5
@@ -742,7 +752,7 @@ class Player(pygame.sprite.Sprite):
 
 
                 #podnoszenie klucza
-                if keys[pygame.K_UP] and self.game.level.key.pickable and not self.getKey:
+                if keys[pygame.K_UP] and self.game.level.key.pickable and not self.getKey and self.game.level.key.currentMap == self.game.level.currentMap:
                     self.getKey = True
                     self.game.sounds.playSound("getKey")
                     self.game.level.key.rect.x = -150
@@ -770,6 +780,7 @@ class Player(pygame.sprite.Sprite):
 
                 self.getPotion()
                 self.attacking()
+
         #wykrywanie kolizji z przedmiotami
         for tile in self.game.tileHandler.tileMap:
             f_recY = pygame.Rect(self.rect.x,self.rect.y + self.vel_y,self.rect.width,self.rect.height)
@@ -777,10 +788,11 @@ class Player(pygame.sprite.Sprite):
                 if tile.rect.colliderect((self.rect.x,self.rect.y - 1*self.game.PIXEL_SIZE,self.rect.width,self.rect.height)):
                     self.crouchUPColision = True
                 if tile.rect.colliderect((self.rect.right+13,self.rect.y - 1,self.rect.width,self.rect.height)) and self.crouchCounter <2:
+
                     self.crouchCollisionRight = True
                 if tile.rect.colliderect((self.rect.left-24,self.rect.y-1,self.rect.width,self.rect.height)) and self.crouchCounter <2:
                     self.crouchCollisionLeft = True
-            if tile.rect.colliderect((self.rect.left-29,self.rect.y-3,self.rect.width,self.rect.height)):
+            if tile.rect.colliderect((self.rect.left-26,self.rect.y-20,self.rect.width,self.rect.height)):
                 self.pickUpSwordCollisionLeft = True
             if tile.rect.colliderect((self.rect.right+11,self.rect.y-3,self.rect.width,self.rect.height)):
                 self.pickUpSwordCollisionRight = True
