@@ -1,6 +1,6 @@
 import pygame,os
 
-from level import Level1,Level2,WorkingLevel
+from level import Level1
 class UI:
     path = os.path.join(os.path.dirname(os.getcwd()), 'images', 'maps')
     BLACK = (0, 0, 0)

@@ -41,12 +41,10 @@ class Sound():
         return sound
 
     def playSound(self,fileName):
-        print(f"leci {fileName}")
         if fileName == "music" or fileName == "menuMusic" or fileName == "music2":
             self.sounds[fileName].play(loops=-1)
         else:
             self.sounds[fileName].play()
 
     def stopSound(self,fileName):
-        print(f"stopujemy {fileName}")
         self.sounds[fileName].stop()

@@ -3,7 +3,7 @@ import time
 import pygame
 from player import Player
 from tileHandler import TileHandler
-from level import Level1,Level2,WorkingLevel
+from level import Level1,Level2
 from ui import UI
 from sound import Sound
 class Game:

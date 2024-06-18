@@ -548,11 +548,9 @@ class Player(pygame.sprite.Sprite):
                     else:
                         self.rect = self.image.get_rect(topright=(self.current_right, self.current_top))
                 elif self.pickUpSwordCollisionLeft:
-                    print("wtf")
                     self.attack = False
                     self.rect = self.image.get_rect(topright=(self.current_right, self.current_top))
                 elif self.pickUpSwordCollisionRight:
-                    print("wtf2")
                     self.attack = False
                     self.rect = self.image.get_rect(topleft=(self.current_left, self.current_top))
             elif not self.attack:

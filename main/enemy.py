@@ -96,7 +96,6 @@ class Enemy(pygame.sprite.Sprite,abc.ABC):
                     else:
                         self.rect = self.image.get_rect(topleft=(self.currentLeft, self.currentTop))
             else:
-                print(self.collisionRight)
                 if self.direction == "right" and not self.collisionLeft:
                     self.attackCounter += 0.1
                     if self.attackCounter > 5:

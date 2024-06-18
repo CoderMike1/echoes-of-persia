@@ -108,7 +108,6 @@ class TileHandler(pygame.sprite.Sprite):
 
 
     def loadMap(self,mapName):
-        print(mapName)
         self.mapname = mapName
         self.background = self.backgrounds[int(mapName.split("/")[1].strip(".txt"))%4]
         self.tileMap.clear()
