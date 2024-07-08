@@ -8,6 +8,7 @@ from ui import UI
 from sound import Sound
 class Game:
     LIGHTBLUE = pygame.color.THECOLORS['lightblue']
+
     def __init__(self):
         pygame.init()
         pygame.display.set_caption("Project game")
@@ -26,7 +27,6 @@ class Game:
 
         self.sounds = Sound()
         self.sounds.playSound("menuMusic")
-
         self.gameOver = False
 
         #inicjalizacja obiektow
@@ -34,9 +34,7 @@ class Game:
 
         self.level = None
 
-
         self.tileHandler = TileHandler(self)
-
 
         self.ui = UI(self)
 

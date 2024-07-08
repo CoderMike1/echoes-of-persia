@@ -22,16 +22,19 @@ class Sound():
         self.sounds.update({"trapHide": self.load_sounds("trapHide.mp3", 0.5*self.soundVolume)})
         self.sounds.update({"stabbed": self.load_sounds("stabbed.wav", 0.5*self.soundVolume)})
         self.sounds.update({"openDoor": self.load_sounds("opendoor.mp3", 0.5*self.soundVolume)})
-        self.sounds.update({"getKey": self.load_sounds("collectKey.mp3", 0.5*self.soundVolume)})
+        self.sounds.update({"getKey": self.load_sounds("collectKey.wav", 0.5*self.soundVolume)})
 
         self.sounds.update({"1level": self.load_sounds("firstLevel.mp3", 0.6 * self.soundVolume)})
 
         self.sounds.update({"music": self.load_sounds("music.mp3", 0.3 * self.soundVolume)})
         self.sounds.update({"music2": self.load_sounds("music2.mp3", 0.4 * self.soundVolume)})
         self.sounds.update({"menuMusic": self.load_sounds("menuMusic.mp3", 0.4 * self.soundVolume)})
-        self.sounds.update({"gameover": self.load_sounds("gameover.mp3", 0.8 * self.soundVolume)})
-        self.sounds.update({"nextLevel": self.load_sounds("nextLevel.mp3", 0.8 * self.soundVolume)})
-        self.sounds.update({"gamewin": self.load_sounds("gamewin.mp3", 0.5 * self.soundVolume)})
+        self.sounds.update({"gameover": self.load_sounds("gameover.wav", 0.8 * self.soundVolume)})
+        #self.sounds.update({"gameover": self.load_sounds("opendoor.mp3", 0.5 * self.soundVolume)})
+        self.sounds.update({"nextLevel": self.load_sounds("nextLevel.wav", 0.8 * self.soundVolume)})
+        #self.sounds.update({"nextLevel": self.load_sounds("opendoor.mp3", 0.5 * self.soundVolume)})
+        self.sounds.update({"gamewin": self.load_sounds("gamewin.wav", 0.5 * self.soundVolume)})
+        #self.sounds.update({"gamewin": self.load_sounds("opendoor.mp3", 0.5 * self.soundVolume)})
 
         pygame.mixer.init()
 
