@@ -20,9 +20,9 @@ python __init__.py
 ```
 ## SCREENSHOTS
 <p align="center">
-  <img src="screenshots/z1.jpg"  width="300" style="margin: 10px;">
-  <img src="screenshots/z2.jpg"  width="300" style="margin: 10px;">
-  <img src="screenshots/z3.jpg"  width="300" style="margin: 10px;">
+  <img src="screenshots/z1.png"  width="300" style="margin: 10px;">
+  <img src="screenshots/z2.png"  width="300" style="margin: 10px;">
+  <img src="screenshots/z3.png"  width="300" style="margin: 10px;">
 </p>
 
 
