@@ -18,6 +18,14 @@ To run this game :
 ```
 python __init__.py
 ```
+## SCREENSHOTS
+<p align="center">
+  <img src="screenshots/z1.jpg"  width="300" style="margin: 10px;">
+  <img src="screenshots/z2.jpg"  width="300" style="margin: 10px;">
+  <img src="screenshots/z3.jpg"  width="300" style="margin: 10px;">
+</p>
+
+
 ## LICENSE & COPYRIGHTS
 Links to images & sounds authors:
 Music made by me.
@@ -26,3 +34,5 @@ Tiles and sprites:
 -Level 1 tiles : Styl0o_
 https://creativecommons.org/licenses/by/4.0/
 Sounds are from https://freesound.org/ and https://pixabay.com
+
+
