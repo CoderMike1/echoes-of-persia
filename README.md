@@ -1,7 +1,9 @@
 ## Table of contents
-* [General info](#general-info)
+* [General info](#ECHO OF PERSIA)
 * [Technologies](#technologies)
 * [Setup](#setup)
+* [SCREENSHOTS](#SCREENSHOTS)
+* [LICENSE & COPYRIGHTS](#LICENSE & COPYRIGHTS)
 
 ## ECHO OF PERSIA
 My University project, based on classic game 'Prince of Persia' i made similar working game wrote in python.
