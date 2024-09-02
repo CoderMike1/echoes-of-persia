@@ -17,7 +17,7 @@ To run this game :
 * then run command in correct directory
 ```
 python __init__.py
-
+```
 ## LICENSE & COPYRIGHTS
 Links to images & sounds authors:
 Music made by me.
