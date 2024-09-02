@@ -3,17 +3,17 @@
 * [Technologies](#technologies)
 * [Setup](#setup)
 
-## General info
-This project is simple Lorem ipsum dolor generator.
+## ECHO OF PERSIA
+My University project, based on classic game 'Prince of Persia' i made similar working game wrote in Python.
 	
 ## Technologies
 Project is created with:
-* Lorem version: 12.3
-* Ipsum version: 2.33
-* Ament library version: 999
+* Python 3.9
 	
 ## Setup
-To run this project, install it locally using npm:
+To run this game :
+* install python >=3.9 version
+* 
 
 ```
 $ cd ../lorem
