@@ -9,7 +9,7 @@
 My University project, based on classic game 'Prince of Persia' i made similar working game wrote in python.
 	
 ## Technologies
-Project is created with:
+Project was created with:
 * Python 3.9
 	
 ## Setup
