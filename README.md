@@ -18,6 +18,8 @@ To run this game :
 * download or clone the repository 
 * then run command in correct directory
 ```
+git clone https://github.com/CoderMike1/echoes-of-persia.git
+cd echoes-of-persia/main
 python __init__.py
 ```
 ## SCREENSHOTS
